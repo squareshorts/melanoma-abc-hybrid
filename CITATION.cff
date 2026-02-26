@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: "melanoma-abc-hybrid: Reproducible Evaluation Framework for Dermoscopic Classification"
+message: "If you use this software, please cite the associated manuscript."
+type: software
+authors:
+  - family-names: Chaves
+    given-names: Rafael Oliveira
+    affiliation: Federal University of Pará
+  - family-names: Pereira Junior
+    given-names: Antonio
+    affiliation: Federal University of Pará
+year: 2026
+license: MIT
+repository-code: "https://github.com/YOUR_GITHUB_USERNAME/melanoma-abc-hybrid"
+keywords:
+  - melanoma
+  - dermoscopy
+  - calibration
+  - decision-curve analysis
+  - explainable AI
+  - SHAP
+  - Grad-CAM
+  - dataset shift

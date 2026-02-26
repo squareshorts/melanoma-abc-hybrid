@@ -1,0 +1,26 @@
+# Virtual environment
+.venv/
+__pycache__/
+*.pyc
+
+# Raw and derived data
+data/raw/
+data/derived/
+data_local_backup/
+
+# Results
+results/runs/
+results/audit/
+results/figures/
+results/tables/
+
+# Checkpoints and large artifacts
+*.pt
+*.pth
+*.npy
+*.joblib
+*.pkl
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,90 @@
+seed: 42
+
+# ================================================================
+# DATA ROOT (OUTSIDE REPOSITORY)
+# ================================================================
+# Example (Windows):
+#   C:/work/datasets
+#
+# Example (Linux):
+#   /home/user/datasets
+#
+data_root: "C:/work/datasets"
+
+# ================================================================
+# RAW DATA (relative to data_root)
+# ================================================================
+raw:
+  ham:
+    images: "HAM10000/images"
+    metadata: "HAM10000/metadata.csv"
+
+  isic_task1:
+    images: "ISIC2018/Task1/images"
+    masks:  "ISIC2018/Task1/masks"
+
+  isic_task3:
+    images: "ISIC2018/Task3/images"
+    labels: "ISIC2018/Task3/labels.csv"
+
+# ================================================================
+# DERIVED DATA (INSIDE REPOSITORY)
+# ================================================================
+derived:
+  split_json: "data/splits/ham_lesion_split.json"
+
+  ham_seg_dir: "data/derived/segmentations/ham_levelset"
+  isic_task1_levelset_dir: "data/derived/segmentations/isic_task1_levelset"
+  isic_task1_baseline_dir: "data/derived/segmentations/isic_task1_baseline"
+  isic_task3_seg_dir: "data/derived/segmentations/isic_task3_levelset"
+
+  ham_abc_csv: "data/derived/features/ham_abc.csv"
+  isic_task3_abc_csv: "data/derived/features/isic_task3_abc.csv"
+
+  ham_emb_npy: "data/derived/embeddings/ham_effb0.npy"
+  ham_emb_ids: "data/derived/embeddings/ham_effb0_ids.csv"
+  isic_task3_emb_npy: "data/derived/embeddings/isic_task3_effb0.npy"
+  isic_task3_emb_ids: "data/derived/embeddings/isic_task3_effb0_ids.csv"
+
+  deep_ckpt: "results/runs/deep_baseline/efficientnet_b0_best.pt"
+
+# ================================================================
+# IMAGE PREPROCESSING
+# ================================================================
+image:
+  size: 224
+  normalize: "imagenet"
+
+# ================================================================
+# SEGMENTATION
+# ================================================================
+segmentation:
+  levelset:
+    iterations: 60
+    smoothing: 1
+  postprocess:
+    min_area_ratio: 0.01
+
+# ================================================================
+# TRAINING (DEEP BASELINE)
+# ================================================================
+training:
+  deep:
+    backbone: "efficientnet_b0"
+    epochs: 20
+    batch_size: 32
+    lr: 1e-4
+    weight_decay: 1e-4
+    num_workers: 2
+    amp: true
+
+# ================================================================
+# XGBOOST (HANDCRAFTED + HYBRID)
+# ================================================================
+xgb:
+  n_estimators: 600
+  max_depth: 4
+  learning_rate: 0.03
+  subsample: 0.9
+  colsample_bytree: 0.9
+  reg_lambda: 1.0
