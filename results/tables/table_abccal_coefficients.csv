@@ -1,0 +1,11 @@
+Feature,Alpha (Slope modifier),Beta (Intercept modifier)
+A_asymmetry,0.22059916,0.11145267
+B_border_irreg,-0.0466048,0.19027236
+C_color_mean_v,-0.09836272,-0.054257337
+C_color_std_v,-0.26240954,0.252778
+C_color_mean_s,-0.041854415,0.06630241
+C_color_std_s,-0.08817458,0.009258696
+C_glcm_contrast_d1,1.054712,0.56607217
+C_glcm_homogeneity_d1,-1.0710999,-6.1403656
+C_glcm_contrast_d2,-1.3604549,-1.2035611
+C_glcm_homogeneity_d2,0.8146236,5.600107

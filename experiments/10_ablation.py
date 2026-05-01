@@ -6,6 +6,7 @@ from src.utils.io import load_config, read_json
 from src.data.ham import load_ham_metadata
 from src.models.xgb_models import train_xgb, predict_proba
 from src.evaluation.metrics import compute_basic
+from src.evaluation.bootstrap import bootstrap_ci
 
 def load_embeddings(npy_path, ids_csv):
     E = np.load(npy_path)
@@ -31,10 +32,10 @@ if __name__ == "__main__":
     train_ids = set(split["train"])
     test_ids = set(split["test"])
 
-    df_train = df_meta[df_meta["lesion_id"].isin(train_ids)][["image_id","label"]].drop_duplicates().merge(feats, on="image_id", how="inner")
-    df_test  = df_meta[df_meta["lesion_id"].isin(test_ids)][["image_id","label"]].drop_duplicates().merge(feats, on="image_id", how="inner")
+    df_train = df_meta[df_meta["lesion_id"].isin(train_ids)][["image_id","label","lesion_id"]].drop_duplicates().merge(feats, on="image_id", how="inner")
+    df_test  = df_meta[df_meta["lesion_id"].isin(test_ids)][["image_id","label","lesion_id"]].drop_duplicates().merge(feats, on="image_id", how="inner")
 
-    feat_cols = [c for c in df_train.columns if c not in ["image_id","label"]]
+    feat_cols = [c for c in df_train.columns if c not in ["image_id","label","lesion_id"]]
     E_ham, ids_ham = load_embeddings(cfg["derived"]["ham_emb_npy"], cfg["derived"]["ham_emb_ids"])
     df_train_al, Etr = align(df_train[["image_id"]], E_ham, ids_ham)
     df_test_al,  Ete = align(df_test[["image_id"]],  E_ham, ids_ham)
@@ -51,15 +52,30 @@ if __name__ == "__main__":
     Xte_full = np.concatenate([Xte_abc, Ete], axis=1)
     m_full = train_xgb(Xtr_full, ytr, cfg["xgb"])
     p_full = predict_proba(m_full, Xte_full)
-    rows.append({"variant":"full_hybrid", **compute_basic(yte, p_full)})
+    stats_full = compute_basic(yte, p_full)
+    row_full = {"variant":"full_hybrid", **stats_full}
+    for k in ["AUC","PR_AUC","Brier"]:
+        lo, hi = bootstrap_ci(yte, p_full, k, n=1000, seed=cfg["seed"], thr=0.5, groups=df_test["lesion_id"].values)
+        row_full[f"{k}_CI95"] = f"[{lo:.3f}, {hi:.3f}]"
+    rows.append(row_full)
 
     m_noemb = train_xgb(Xtr_abc, ytr, cfg["xgb"])
     p_noemb = predict_proba(m_noemb, Xte_abc)
-    rows.append({"variant":"no_embeddings", **compute_basic(yte, p_noemb)})
+    stats_noemb = compute_basic(yte, p_noemb)
+    row_noemb = {"variant":"no_embeddings", **stats_noemb}
+    for k in ["AUC","PR_AUC","Brier"]:
+        lo, hi = bootstrap_ci(yte, p_noemb, k, n=1000, seed=cfg["seed"], thr=0.5, groups=df_test["lesion_id"].values)
+        row_noemb[f"{k}_CI95"] = f"[{lo:.3f}, {hi:.3f}]"
+    rows.append(row_noemb)
 
     m_noabc = train_xgb(Etr, ytr, cfg["xgb"])
     p_noabc = predict_proba(m_noabc, Ete)
-    rows.append({"variant":"no_abc", **compute_basic(yte, p_noabc)})
+    stats_noabc = compute_basic(yte, p_noabc)
+    row_noabc = {"variant":"no_abc", **stats_noabc}
+    for k in ["AUC","PR_AUC","Brier"]:
+        lo, hi = bootstrap_ci(yte, p_noabc, k, n=1000, seed=cfg["seed"], thr=0.5, groups=df_test["lesion_id"].values)
+        row_noabc[f"{k}_CI95"] = f"[{lo:.3f}, {hi:.3f}]"
+    rows.append(row_noabc)
 
     pd.DataFrame(rows).to_csv("results/tables/table_ablation_internal.csv", index=False)
     print(pd.DataFrame(rows))

@@ -1,7 +1,8 @@
 import os
 import pandas as pd
 
-MALIGNANT_DX = {"mel", "bcc", "akiec"}
+POSITIVE_DX = "mel"
+LABEL_DEFINITION = "melanoma vs all other diagnoses (label = 1 if dx == 'mel')"
 
 def load_ham_metadata(metadata_csv: str) -> pd.DataFrame:
     df = pd.read_csv(metadata_csv)
@@ -10,7 +11,7 @@ def load_ham_metadata(metadata_csv: str) -> pd.DataFrame:
         raise ValueError(f"metadata.csv must contain columns: {required}")
     if "dx" not in df.columns:
         raise ValueError("metadata.csv must contain dx column")
-    df["label"] = df["dx"].astype(str).str.lower().isin(MALIGNANT_DX).astype(int)
+    df["label"] = (df["dx"].astype(str).str.lower() == POSITIVE_DX).astype(int)
     return df
 
 def image_path(images_dir: str, image_id: str) -> str:

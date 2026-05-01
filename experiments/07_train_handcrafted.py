@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import joblib
 from src.utils.io import load_config, read_json
 from src.data.ham import load_ham_metadata
 from src.models.xgb_models import train_xgb, predict_proba
@@ -18,10 +19,10 @@ if __name__ == "__main__":
     train_ids = set(split["train"])
     test_ids = set(split["test"])
 
-    df_train = df_meta[df_meta["lesion_id"].isin(train_ids)][["image_id","label"]].drop_duplicates().merge(feats, on="image_id", how="inner")
-    df_test  = df_meta[df_meta["lesion_id"].isin(test_ids)][["image_id","label"]].drop_duplicates().merge(feats, on="image_id", how="inner")
+    df_train = df_meta[df_meta["lesion_id"].isin(train_ids)][["image_id","label","lesion_id"]].drop_duplicates().merge(feats, on="image_id", how="inner")
+    df_test  = df_meta[df_meta["lesion_id"].isin(test_ids)][["image_id","label","lesion_id"]].drop_duplicates().merge(feats, on="image_id", how="inner")
 
-    feat_cols = [c for c in df_train.columns if c not in ["image_id","label"]]
+    feat_cols = [c for c in df_train.columns if c not in ["image_id","label","lesion_id"]]
     Xtr, ytr = df_train[feat_cols].values, df_train["label"].values
     Xte, yte = df_test[feat_cols].values, df_test["label"].values
 
@@ -30,12 +31,13 @@ if __name__ == "__main__":
 
     stats = compute_basic(yte, p, thr=0.5)
     row = {"model":"handcrafted_xgb", **stats}
-    for k in ["AUC","PR_AUC","F1","SENS","SPEC","ACC"]:
-        lo, hi = bootstrap_ci(yte, p, k, n=1000, seed=cfg["seed"], thr=0.5)
+    for k in ["AUC","PR_AUC","Brier","F1","SENS","SPEC","ACC"]:
+        lo, hi = bootstrap_ci(yte, p, k, n=1000, seed=cfg["seed"], thr=0.5, groups=df_test["lesion_id"].values)
         row[f"{k}_CI95"] = f"[{lo:.3f}, {hi:.3f}]"
 
     pd.DataFrame([row]).to_csv("results/tables/table_handcrafted_internal.csv", index=False)
-    pd.DataFrame({"image_id": df_test["image_id"], "y_true": yte, "y_prob": p}).to_csv(
+    pd.DataFrame({"image_id": df_test["image_id"], "lesion_id": df_test["lesion_id"], "y_true": yte, "y_prob": p}).to_csv(
         "results/runs/handcrafted/ham_test_predictions_handcrafted.csv", index=False
     )
+    joblib.dump({"model": model, "feat_cols": feat_cols}, "results/runs/handcrafted/handcrafted_xgb.joblib")
     print(row)

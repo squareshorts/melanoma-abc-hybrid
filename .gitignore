@@ -4,21 +4,29 @@ __pycache__/
 *.pyc
 
 # Raw and derived data
+# Ignore raw datasets and giant segmentation masks
 data/raw/
-data/derived/
+data/derived/segmentations/
 data_local_backup/
 
+# Allow vital aggregated features and embeddings to be tracked
+!data/derived/*.csv
+!data/derived/*.npy
+
 # Results
-results/runs/
+# Ignore raw run outputs by default, but track the models and predictions!
+results/runs/*
+!results/runs/**/*.joblib
+!results/runs/**/*.csv
 results/audit/
-results/figures/
-results/tables/
+
+# Figures and Tables should BE TRACKED for manuscript availability!
+# results/figures/ (uncommented to track)
+# results/tables/ (uncommented to track)
 
 # Checkpoints and large artifacts
 *.pt
 *.pth
-*.npy
-*.joblib
 *.pkl
 
 # OS

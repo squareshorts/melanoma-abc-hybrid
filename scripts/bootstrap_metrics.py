@@ -3,14 +3,26 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_auc_score, average_precision_score, brier_score_loss
 
-def bootstrap_ci(y, p, metric_fn, n=1000, seed=42):
+def bootstrap_ci(y, p, metric_fn, n=1000, seed=42, groups=None):
     rng = np.random.default_rng(seed)
     y = np.asarray(y).astype(int)
     p = np.asarray(p).astype(float)
     vals = []
     N = len(y)
+
+    if groups is not None:
+        groups = np.asarray(groups)
+        unique_groups = np.unique(groups)
+        n_groups = len(unique_groups)
+        group_to_idx = {g: np.where(groups == g)[0] for g in unique_groups}
+
     for _ in range(n):
-        idx = rng.integers(0, N, size=N)
+        if groups is not None:
+            sampled_groups = rng.choice(unique_groups, size=n_groups, replace=True)
+            idx = np.concatenate([group_to_idx[g] for g in sampled_groups])
+        else:
+            idx = rng.integers(0, N, size=N)
+            
         yy = y[idx]
         pp = p[idx]
         # guard: skip degenerate resamples for AUC
@@ -35,10 +47,11 @@ if __name__ == "__main__":
     df = pd.read_csv(args.pred_csv)
     y = df[args.y_col].values
     p = df[args.p_col].values
+    groups = df["lesion_id"].values if "lesion_id" in df.columns else None
 
     rows = []
     for name, fn in [("roc_auc", roc_auc_score), ("pr_auc", average_precision_score), ("brier", brier_score_loss)]:
-        mean, lo, hi, m = bootstrap_ci(y, p, fn, n=args.n, seed=args.seed)
+        mean, lo, hi, m = bootstrap_ci(y, p, fn, n=args.n, seed=args.seed, groups=groups)
         rows.append({"metric": name, "mean": mean, "ci_lo": lo, "ci_hi": hi, "n_eff": m})
     pd.DataFrame(rows).to_csv(args.out_csv, index=False)
     print("Wrote", args.out_csv)

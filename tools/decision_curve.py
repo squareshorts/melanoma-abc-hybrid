@@ -15,7 +15,7 @@ def net_benefit(y_true, p, thr):
 
 def decision_curve(df, y_col="y", p_col="p", thr_grid=None):
     if thr_grid is None:
-        thr_grid = np.linspace(0.01, 0.99, 99)
+        thr_grid = np.linspace(0.02, 0.50, 49)
     y = df[y_col].values
     p = df[p_col].values
     prev = y.mean()

@@ -1,0 +1,9 @@
+analysis,check,value,status,details
+split_integrity,lesion_id_overlap_train_val,0,pass,
+split_integrity,lesion_id_overlap_train_test,0,pass,
+split_integrity,lesion_id_overlap_val_test,0,pass,
+split_integrity,duplicate_image_id_cross_split,0,pass,
+split_integrity,phash_images_missing_or_unreadable,0,pass,perceptual hashes computed with imagehash.phash where images were available
+split_integrity,exact_phash_cross_split_pairs,1,warning,ISIC_0033598:train vs ISIC_0032228:test d=0
+split_integrity,near_phash_cross_split_pairs_hamming_1_to_4,174,warning,ISIC_0033152:train vs ISIC_0030859:val d=4; ISIC_0034052:train vs ISIC_0032792:val d=4; ISIC_0029480:train vs ISIC_0024704:val d=4; ISIC_0031950:train vs ISIC_0027443:val d=4; ISIC_0027819:train vs ISIC_0029857:val d=4; ISIC_0027819:train vs ISIC_0025713:val d=4; ISIC_0027819:train vs ISIC_0033018:val d=4; ISIC_0025287:train vs ISIC_0024404:val d=4; ISIC_0025201:train vs ISIC_0026110:val d=4; ISIC_0027276:train vs ISIC_0026312:val d=4; ISIC_0028869:train vs ISIC_0029502:val d=2; ISIC_0028869:train vs ISIC_0031896:val d=4
+split_integrity,minimum_cross_split_phash_hamming_distance,0,warning,near-duplicate screening threshold was Hamming distance <= 4

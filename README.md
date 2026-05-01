@@ -5,7 +5,7 @@ segmentation-derived ABC descriptors, deep convolutional embeddings, calibration
 decision-curve evaluation, and dual-level explainability.
 
 This repository accompanies the manuscript:
-"A Structured Evaluation Framework for Dermoscopic Classification Integrating Segmentation, Calibration, and Explainability"
+"A Reproducible Within-Corpus Audit Framework for Melanoma Classification Integrating Segmentation, Calibration, Decision-Curve Analysis, and Explainability"
 
 ---
 
@@ -18,7 +18,7 @@ The pipeline implements:
 - Handcrafted ABC descriptors (asymmetry, border, HSV, GLCM)
 - Deep baseline (EfficientNet-B0)
 - Hybrid model (ABC + EfficientNet embeddings via XGBoost)
-- External validation (train: HAM10000 → test: ISIC 2018 Task 3)
+- Secondary ISIC 2018 Task 3 melanoma-label evaluation on the same HAM10000/ISIC 2018 training image corpus
 - Ablation experiments
 - Lesion-clustered bootstrap (95% CIs)
 - Calibration analysis (Brier, slope/intercept, reliability diagrams)
@@ -41,8 +41,8 @@ The framework explicitly separates:
 
 ### HAM10000
 Binary classification:
-- Malignant = {mel, bcc, akiec}
-- Benign = all other classes
+- Positive = melanoma (`dx == mel`)
+- Negative = all other diagnoses
 
 Metadata must include:
 - image_id
@@ -55,8 +55,12 @@ Binary labels file:
 image_id,label
 
 Where:
-- label = 1 → malignant
-- label = 0 → benign
+- label = 1 -> melanoma
+- label = 0 -> non-melanoma
+
+The local ISIC 2018 Task 3 files used with this repository overlap HAM10000 by
+10,015/10,015 image identifiers. They are therefore treated as a secondary
+within-corpus melanoma-label evaluation, not as independent external validation.
 
 ---
 
@@ -97,23 +101,23 @@ python -m pip install -r requirements.txt
 ## Execution Order
 
 
-python experiments\01_make_split.py
-python experiments\02_segment_isic_task1.py
-python experiments\03_segment_ham.py
-python experiments\04_extract_abc.py
-python experiments\05_train_deep_baseline.py
-python experiments\06_extract_embeddings.py
-python experiments\07_train_handcrafted.py
-python experiments\08_train_hybrid.py
-python experiments\09_external_validation.py
-python experiments\10_ablation.py
-python experiments\11_explainability.py
-python experiments\12_build_paper_artifacts.py
+python -m experiments.01_make_split
+python -m experiments.02_segment_isic_task1
+python -m experiments.03_segment_ham
+python -m experiments.04_extract_abc
+python -m experiments.05_train_deep_baseline
+python -m experiments.06_extract_embeddings
+python -m experiments.07_train_handcrafted
+python -m experiments.08_train_hybrid
+python -m experiments.09_external_validation
+python -m experiments.10_ablation
+python -m experiments.11_explainability
+python -m experiments.12_build_paper_artifacts
 
 
 Optional:
 
-python experiments\13_build_split_comparison.py
+python -m experiments.13_build_split_comparison
 
 
 ---

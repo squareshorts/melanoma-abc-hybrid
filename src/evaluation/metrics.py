@@ -1,5 +1,12 @@
 import numpy as np
-from sklearn.metrics import roc_auc_score, average_precision_score, f1_score, accuracy_score, confusion_matrix
+from sklearn.metrics import (
+    roc_auc_score,
+    average_precision_score,
+    brier_score_loss,
+    f1_score,
+    accuracy_score,
+    confusion_matrix,
+)
 
 def safe_auc(y_true, y_score):
     y_true = np.asarray(y_true)
@@ -19,6 +26,7 @@ def compute_basic(y_true, y_score, thr=0.5):
     return {
         "AUC": safe_auc(y_true, y_score),
         "PR_AUC": average_precision_score(y_true, y_score) if len(np.unique(y_true))>1 else float("nan"),
+        "Brier": brier_score_loss(y_true, y_score),
         "F1": f1_score(y_true, y_pred, zero_division=0),
         "ACC": accuracy_score(y_true, y_pred),
         "SENS": sens,

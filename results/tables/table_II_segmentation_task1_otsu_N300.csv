@@ -1,0 +1,2 @@
+method,dice_mean,iou_mean,failure_rate,N
+OtsuBaseline,0.6885481155725447,0.5713935516908348,0.0,300

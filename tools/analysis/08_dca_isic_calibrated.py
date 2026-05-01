@@ -27,7 +27,7 @@ def run_one(pred_path, tag):
     y = df["y_true"].astype(int).values
     p = df["y_prob"].astype(float).values
 
-    thresholds = np.linspace(0.01, 0.99, 99)
+    thresholds = np.linspace(0.02, 0.50, 49)
     dca = decision_curve(y, p, thresholds)
 
     out_path = f"results/audit/dca_isic_{tag}.csv"

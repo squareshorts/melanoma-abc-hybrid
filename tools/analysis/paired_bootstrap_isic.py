@@ -35,14 +35,20 @@ df = deep[["image_id", "y", "p_deep"]].merge(
 df["y"] = df["y"].astype(float)
 
 N = len(df)
-indices = np.arange(N)
-
-dAUC = []
-dPR = []
-dBrier = []
+# Handle grouping if lesion_id exists
+group_col = "lesion_id" if "lesion_id" in df.columns else None
+if group_col:
+    unique_groups = df[group_col].unique()
+    n_groups = len(unique_groups)
+    group_to_idx = {g: np.where(df[group_col] == g)[0] for g in unique_groups}
 
 for _ in range(N_BOOT):
-    sample_idx = RNG.choice(indices, size=N, replace=True)
+    if group_col:
+        sampled_groups = RNG.choice(unique_groups, size=n_groups, replace=True)
+        sample_idx = np.concatenate([group_to_idx[g] for g in sampled_groups])
+    else:
+        sample_idx = RNG.choice(indices, size=N, replace=True)
+    
     boot = df.iloc[sample_idx]
 
     if boot["y"].nunique() < 2:

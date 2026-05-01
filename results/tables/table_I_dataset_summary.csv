@@ -1,0 +1,2 @@
+dataset,images,lesions,positive,negative,endpoint,split
+HAM10000 / ISIC 2018 training images,10015,7470,1113,8902,melanoma vs all other diagnoses,lesion_id-based train/validation/test

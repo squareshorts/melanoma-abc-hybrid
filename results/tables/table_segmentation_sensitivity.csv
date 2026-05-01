@@ -1,0 +1,2 @@
+analysis,status,levelset_ham_features,levelset_bcn_features,otsu_ham_features,otsu_bcn_features,note
+segmentation_sensitivity,skipped,C:\work\melanoma-abc-hybrid\data\derived\features\ham_abc.csv,C:\work\melanoma-abc-hybrid\data\derived\features\bcn20000_abc.csv,missing,missing,Otsu-derived HAM and BCN feature files were not found; no classifier was refit and no segmentation-sensitivity result was fabricated.

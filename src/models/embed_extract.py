@@ -28,18 +28,25 @@ class SimpleImageDataset(Dataset):
         x = self.tfm(img)
         return x, img_id
 
-def build_embed_model(backbone: str):
+def build_embed_model(backbone: str, ckpt_path=None):
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    if ckpt_path and os.path.exists(ckpt_path):
+        model = timm.create_model(backbone, pretrained=False, num_classes=1)
+        ckpt = torch.load(ckpt_path, map_location=device)
+        model.load_state_dict(ckpt["model"])
+        model.reset_classifier(0, global_pool="avg")
+        return model
     return timm.create_model(backbone, pretrained=True, num_classes=0, global_pool="avg")
 
 @torch.no_grad()
 def extract_embeddings(backbone, df_ids, images_dir, out_npy, out_ids_csv, image_size=224, normalize="imagenet",
-                       batch_size=64, num_workers=2, kind="ham"):
+                       batch_size=64, num_workers=2, kind="ham", ckpt_path=None):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tfm = build_transforms(image_size, normalize, train=False)
     ds = SimpleImageDataset(df_ids, images_dir, tfm, kind=kind)
     ld = DataLoader(ds, batch_size=batch_size, shuffle=False, num_workers=int(num_workers))
 
-    model = build_embed_model(backbone).to(device).eval()
+    model = build_embed_model(backbone, ckpt_path=ckpt_path).to(device).eval()
 
     embs, ids = [], []
     for x, img_id in ld:

@@ -66,14 +66,25 @@ def coerce_score(s):
     return s.astype(float)
 
 
-def bootstrap_ci(y_true, y_score, metric_fn, B=1000, seed=42):
+def bootstrap_ci(y_true, y_score, metric_fn, B=1000, seed=42, groups=None):
     rng = np.random.default_rng(seed)
     n = len(y_true)
 
     vals = np.empty(B, dtype=float)
 
+    if groups is not None:
+        groups = np.asarray(groups)
+        unique_groups = np.unique(groups)
+        n_groups = len(unique_groups)
+        group_to_idx = {g: np.where(groups == g)[0] for g in unique_groups}
+
     for b in range(B):
-        idx = rng.integers(0, n, size=n)
+        if groups is not None:
+            sampled_groups = rng.choice(unique_groups, size=n_groups, replace=True)
+            idx = np.concatenate([group_to_idx[g] for g in sampled_groups])
+        else:
+            idx = rng.integers(0, n, size=n)
+            
         yt = y_true[idx]
         ys = y_score[idx]
 
@@ -98,6 +109,9 @@ def process_file(csv_path: str, B: int, seed: int):
     y_true_col = find_column(df, DEFAULT_TRUE_CANDS)
     y_score_col = find_column(df, DEFAULT_SCORE_CANDS)
 
+    group_col = find_column(df, ["lesion_id", "patient_id", "group"])
+    groups = df[group_col].values if group_col else None
+
     if y_true_col is None or y_score_col is None:
         raise KeyError(
             f"Could not auto-detect columns in {csv_path}.\n"
@@ -110,11 +124,11 @@ def process_file(csv_path: str, B: int, seed: int):
     y_score = coerce_score(df[y_score_col])
 
     auc_lo, auc_hi, auc_mean = bootstrap_ci(
-        y_true, y_score, lambda yt, ys: roc_auc_score(yt, ys), B=B, seed=seed
+        y_true, y_score, lambda yt, ys: roc_auc_score(yt, ys), B=B, seed=seed, groups=groups
     )
 
     ap_lo, ap_hi, ap_mean = bootstrap_ci(
-        y_true, y_score, lambda yt, ys: average_precision_score(yt, ys), B=B, seed=seed
+        y_true, y_score, lambda yt, ys: average_precision_score(yt, ys), B=B, seed=seed, groups=groups
     )
 
     out = {

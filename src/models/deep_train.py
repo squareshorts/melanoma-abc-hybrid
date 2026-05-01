@@ -56,9 +56,9 @@ def train_deep(cfg):
     split = read_json(cfg["derived"]["split_json"])
     train_ids, val_ids, test_ids = set(split["train"]), set(split["val"]), set(split["test"])
 
-    df_train = df[df["lesion_id"].isin(train_ids)][["image_id","label"]].drop_duplicates().copy()
-    df_val   = df[df["lesion_id"].isin(val_ids)][["image_id","label"]].drop_duplicates().copy()
-    df_test  = df[df["lesion_id"].isin(test_ids)][["image_id","label"]].drop_duplicates().copy()
+    df_train = df[df["lesion_id"].isin(train_ids)][["image_id","label","lesion_id"]].drop_duplicates().copy()
+    df_val   = df[df["lesion_id"].isin(val_ids)][["image_id","label","lesion_id"]].drop_duplicates().copy()
+    df_test  = df[df["lesion_id"].isin(test_ids)][["image_id","label","lesion_id"]].drop_duplicates().copy()
 
     tfm_train = build_transforms(cfg["image"]["size"], cfg["image"]["normalize"], train=True)
     tfm_eval  = build_transforms(cfg["image"]["size"], cfg["image"]["normalize"], train=False)
@@ -115,12 +115,13 @@ def train_deep(cfg):
     stats05 = compute_basic(yt, pt, thr=0.5)
     stats90 = compute_basic(yt, pt, thr=thr90)
 
+    lesions_aligned = df_test.set_index("image_id").loc[ids_te]["lesion_id"].values
     ci = {}
-    for k in ["AUC","PR_AUC","F1","SENS","SPEC","ACC"]:
-        lo, hi = bootstrap_ci(yt, pt, k, n=1000, seed=cfg["seed"], thr=0.5)
+    for k in ["AUC","PR_AUC","Brier","F1","SENS","SPEC","ACC"]:
+        lo, hi = bootstrap_ci(yt, pt, k, n=1000, seed=cfg["seed"], thr=0.5, groups=lesions_aligned)
         ci[k] = (lo, hi)
 
-    pd.DataFrame({"image_id": ids_te, "y_true": yt.astype(int), "y_prob": pt.astype(float)}).to_csv(
+    pd.DataFrame({"image_id": ids_te, "lesion_id": lesions_aligned, "y_true": yt.astype(int), "y_prob": pt.astype(float)}).to_csv(
         os.path.join(run_dir, "ham_test_predictions_deep.csv"), index=False
     )
 

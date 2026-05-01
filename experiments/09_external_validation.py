@@ -10,6 +10,7 @@ import joblib
 
 from src.utils.io import load_config
 from src.data.isic import load_isic_task3_labels
+from src.data.ham import load_ham_metadata
 from src.models.xgb_models import predict_proba
 from src.evaluation.metrics import compute_basic
 from src.evaluation.bootstrap import bootstrap_ci
@@ -55,6 +56,34 @@ if __name__ == "__main__":
     os.makedirs("results/tables", exist_ok=True)
 
     df_isic = load_isic_task3_labels(cfg["paths"]["isic_task3_labels"])
+    df_ham_ids = load_ham_metadata(cfg["paths"]["ham_metadata"])[["image_id", "lesion_id"]].drop_duplicates()
+    df_isic = df_isic.merge(df_ham_ids, on="image_id", how="left")
+
+    rows = []
+
+    # ---------------------------
+    # ABC-ONLY EVALUATION
+    # ---------------------------
+    stats_abc = None
+    handcrafted_path = "results/runs/handcrafted/handcrafted_xgb.joblib"
+    if os.path.exists(handcrafted_path):
+        pack_abc = joblib.load(handcrafted_path)
+        model_abc = pack_abc["model"]
+        feat_cols_abc = pack_abc["feat_cols"]
+
+        feats_isic = pd.read_csv(cfg["derived"]["isic_task3_abc_csv"])
+        df_abc = df_isic.merge(feats_isic, on="image_id", how="inner")
+        Xabc_only = df_abc[feat_cols_abc].values
+        y_abc = df_abc["label"].values
+        p_abc = predict_proba(model_abc, Xabc_only)
+        stats_abc = compute_basic(y_abc, p_abc, thr=0.5)
+
+        pd.DataFrame({
+            "image_id": df_abc["image_id"],
+            "lesion_id": df_abc["lesion_id"],
+            "y_true": y_abc,
+            "y_prob": p_abc
+        }).to_csv("results/runs/handcrafted/isic_task3_predictions_handcrafted.csv", index=False)
 
     # ---------------------------
     # HYBRID EVALUATION
@@ -82,6 +111,7 @@ if __name__ == "__main__":
 
     pd.DataFrame({
         "image_id": df["image_id"],
+        "lesion_id": df["lesion_id"],
         "y_true": y,
         "y_prob": p_hybrid
     }).to_csv("results/runs/hybrid/isic_task3_predictions_hybrid.csv", index=False)
@@ -111,6 +141,7 @@ if __name__ == "__main__":
 
     pd.DataFrame({
         "image_id": ids_deep,
+        "lesion_id": df_isic.set_index("image_id").loc[ids_deep]["lesion_id"].values,
         "y_true": y_deep,
         "y_prob": p_deep
     }).to_csv("results/runs/deep_baseline/isic_task3_predictions_deep.csv", index=False)
@@ -118,26 +149,34 @@ if __name__ == "__main__":
     # ---------------------------
     # SAVE SUMMARY TABLE
     # ---------------------------
-    rows = []
+    model_stats = []
+    if stats_abc is not None:
+        model_stats.append(("abc_secondary_isic_task3", stats_abc, y_abc, p_abc, df_abc["lesion_id"].values))
+    model_stats.extend([
+        ("hybrid_secondary_isic_task3", stats_hybrid, y, p_hybrid, df["lesion_id"].values),
+        ("deep_secondary_isic_task3", stats_deep, y_deep, p_deep, df_isic.set_index("image_id").loc[ids_deep]["lesion_id"].values),
+    ])
 
-    for name, stats in [
-        ("hybrid_external_isic_task3", stats_hybrid),
-        ("deep_external_isic_task3", stats_deep)
-    ]:
+    for name, stats, yy, pp, groups in model_stats:
         row = {"model": name, **stats}
-        for k in ["AUC","PR_AUC","F1","SENS","SPEC","ACC"]:
+        for k in ["AUC","PR_AUC","Brier","F1","SENS","SPEC","ACC"]:
             lo, hi = bootstrap_ci(
-                y_deep if "deep" in name else y,
-                p_deep if "deep" in name else p_hybrid,
+                yy,
+                pp,
                 k,
                 n=1000,
                 seed=cfg["seed"],
-                thr=0.5
+                thr=0.5,
+                groups=groups
             )
             row[f"{k}_CI95"] = f"[{lo:.3f}, {hi:.3f}]"
         rows.append(row)
 
-    pd.DataFrame(rows).to_csv("results/tables/table_external_isic_task3.csv", index=False)
+    out = pd.DataFrame(rows)
+    out.to_csv("results/tables/table_secondary_isic_task3.csv", index=False)
+    out.to_csv("results/tables/table_external_isic_task3.csv", index=False)
 
+    if stats_abc is not None:
+        print("ABC:", stats_abc)
     print("Hybrid:", stats_hybrid)
     print("Deep:", stats_deep)
