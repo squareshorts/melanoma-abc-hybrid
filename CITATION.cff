@@ -2,6 +2,7 @@ cff-version: 1.2.0
 title: "melanoma-abc-hybrid: Reproducible Evaluation Framework for Dermoscopic Classification"
 message: "If you use this software, please cite the associated manuscript."
 type: software
+version: "v1.0.0"
 authors:
   - family-names: Chaves
     given-names: Rafael Oliveira
@@ -10,8 +11,10 @@ authors:
     given-names: Antonio
     affiliation: Federal University of Pará
 year: 2026
+date-released: 2026-02-26
 license: MIT
-repository-code: "https://github.com/YOUR_GITHUB_USERNAME/melanoma-abc-hybrid"
+repository-code: "https://github.com/squareshorts/melanoma-abc-hybrid"
+url: "https://github.com/squareshorts/melanoma-abc-hybrid/releases/tag/v1.0.0"
 keywords:
   - melanoma
   - dermoscopy
