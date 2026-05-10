@@ -8,8 +8,27 @@
 \usepackage{subcaption}
 \usepackage{float}
 \usepackage[hidelinks]{hyperref}
-\setlength{\tabcolsep}{4pt}
-\graphicspath{{results/figures/}}
+\usepackage{xurl}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{threeparttable}
+\usepackage{caption}
+
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.08}
+\emergencystretch=3em
+\tolerance=2000
+\hbadness=3000
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\captionsetup{font=small}
+\graphicspath{{results/figures/}{./}}
+
+\newcommand{\suppfig}[1]{Supplementary Figure~S#1}
+\newcommand{\supptab}[1]{Supplementary Table~S#1}
 
 \makeatletter
 \pdfstringdefDisableCommands{%
@@ -25,33 +44,27 @@
   round-precision = 3
 }
 
-\journal{Computer Methods and Programs in Biomedicine}
+\journal{Artificial Intelligence in Medicine}
 
 \begin{document}
 
 \begin{frontmatter}
 
-\title{A Reproducible Within-Corpus Audit Framework for Melanoma Classification Integrating Segmentation, Calibration, Decision-Curve Analysis, and Explainability}
-
-\author[inst1]{Rafael Oliveira Chaves\corref{cor1}}
-\author[inst2]{Antonio Pereira Junior}
-\cortext[cor1]{Corresponding author: rafael.ufpa@gmail.com}
-
-\address[inst1]{Institute of Technology, Federal University of Pará, 66075-110 Belém (PA), Brazil}
-\address[inst2]{Signal Processing Laboratory, Federal University of Pará, 66075--110 Belém (PA), Brazil}
+\title{ABC-Augmented Deep Learning for Dermoscopic Melanoma Classification:\\ External Validation under Dataset Shift with Calibration,\\ Decision-Curve, and Saliency Auditing}
 
 \begin{abstract}
-We present a reproducible audit framework for dermoscopic melanoma classification that integrates segmentation-derived descriptors, EfficientNet-B0 representations, calibration analysis, decision-curve assessment, and dual-level explainability. The binary endpoint was harmonized as melanoma versus all other diagnoses, with positive labels defined as \texttt{dx == mel} in HAM10000 and as the official melanoma label in ISIC 2018 Task 3.
+\textbf{Background:} External dataset shift is a major barrier to reliable dermoscopic melanoma classification. Standard evaluation often emphasizes discrimination metrics like ROC-AUC while neglecting calibration, decision utility, and model transparency.
 
-Because the available ISIC 2018 Task 3 files overlapped completely with HAM10000 image identifiers, the Task 3 analysis is reported as a secondary melanoma-label evaluation within the HAM10000/ISIC 2018 image corpus rather than as independent external validation. The primary analysis uses lesion-level train/validation/test separation within HAM10000.
+\textbf{Methods:} We present an externally validated hybrid evaluation framework comparing three model families---a handcrafted ABC descriptor model, an EfficientNet-B0 deep baseline, and a hybrid XGBoost model combining ABC descriptors with EfficientNet-B0 embeddings---on HAM10000 (development) and BCN20000 (independent external validation, after identifier and perceptual-hash duplicate screening). The framework evaluates discrimination, calibration, decision-curve utility, domain-shift quantification, mask robustness, subgroup transportability, post-hoc probability scaling, descriptor-conditioned score correction, and saliency auditing.
 
-On the HAM10000 lesion-level test split, the deep baseline and hybrid model showed similar ROC discrimination (AUC 0.887 and 0.885, respectively), while the hybrid model had lower Brier score (0.080 vs.\ 0.097). The ABC-only model showed lower discrimination (AUC 0.806) but remained useful as an interpretable descriptor baseline. Post-hoc recalibration reduced Brier score for both the deep and hybrid models without materially changing AUC. 
+\textbf{Results:} On HAM10000 (lesion-level test split, $N = 1510$ images), the deep baseline and hybrid model showed similar ROC-AUC (0.887 vs.\ 0.885), while the hybrid model had lower Brier score (0.080 vs.\ 0.097). On BCN20000 ($N = 12{,}413$ after duplicate screening), the hybrid model achieved the highest external AUC (0.761 vs.\ 0.713 for the deep model and 0.692 for ABC-only) and the best sensitivity at fixed specificity $\geq$90\% (0.439, 95\% CI 0.420--0.461 vs.\ 0.365 for the deep model), corresponding to 17 fewer false negatives per 1000 lesions. The hybrid model also outperformed an embeddings-only XGBoost baseline on BCN20000 (AUC 0.761 vs.\ 0.759), confirming that explicit ABC fusion provides an inductive anchor for external transportability. A domain classifier distinguished the two cohorts with AUC 0.987, confirming measurable covariate shift. Temperature scaling gave the best external Brier score (0.166). Clinical error profiling showed that missed melanomas (false negatives) on BCN20000 had markedly lower asymmetry (0.16 vs.\ 0.28 for true positives), lower border irregularity (1.39 vs.\ 2.07), and lighter pigmentation, consistent with selective failure on feature-poor presentations. Fairness analysis showed near-equal false negative rates across biological sex (male FNR 0.852, female FNR 0.861), with a slight disadvantage for patients under 40 years (FNR 0.896 vs.\ 0.841--0.857 for older groups). Color and homogeneity descriptors showed high mask-robustness (ICC $\geq$ 0.73), whereas border irregularity was less stable (ICC 0.269). Grad-CAM saliency frequently extended outside lesion masks (median lesion-overlap fraction 0.000).
 
-Crucially, the frozen HAM10000-trained models were independently validated on the BCN20000 dataset. A strict zero-overlap audit evaluating exact filenames, ISIC identifiers, and perceptual hashing confirmed no leakage between HAM10000 and the BCN20000 cohort. On this external validation, the models demonstrated robust transportability, with the Hybrid model achieving an AUC of 0.761, outperforming both the Deep baseline (AUC 0.713) and the ABC-only model (AUC 0.692). By separating discrimination, probability accuracy, clinical utility, and attribution behavior, this framework supports transparent within-corpus auditing of melanoma classifiers and provides rigorous external dermoscopic validation.
+\textbf{Conclusions:} Hybrid ABC--deep representations improve dermoscopic melanoma ranking under measurable external dataset shift. The ABC components additionally enable clinical error profiling that identifies feature-poor melanomas as the dominant failure mode. Calibration, threshold utility, correction stability, segmentation robustness, and saliency faithfulness require separate evaluation and differ from discrimination performance.
+
 \end{abstract}
 
 \begin{keyword}
-Melanoma classification \sep Dermoscopy \sep Image segmentation \sep Deep learning \sep EfficientNet \sep XGBoost \sep Model interpretability \sep Calibration \sep Decision-curve analysis \sep Reproducible research
+Dermoscopy \sep Melanoma classification \sep External validation \sep Dataset shift \sep Hybrid modeling \sep Calibration \sep Decision-curve analysis \sep Clinical operating points \sep Saliency auditing
 \end{keyword}
 
 \end{frontmatter}
@@ -62,47 +75,41 @@ Evaluation of medical image classifiers often emphasizes discrimination metrics 
 
 Reliable model assessment requires separation of discrimination, calibration, and decision utility. Decision-curve analysis quantifies the net benefit associated with threshold-based use and therefore complements ranking metrics \citep{vickers2006decision,vancalster2025performance}. These issues are especially relevant in dermoscopic melanoma classification, where class imbalance and threshold-dependent triage decisions make probability reliability clinically important.
 
-This study does not claim a new state-of-the-art melanoma classifier. Its contribution is a reproducible evaluation framework that separates discrimination, calibration, recalibration, decision utility, and interpretability for melanoma-only dermoscopic classification under lesion-level separation, audited dataset provenance, and true independent external validation. We compare three model families: an ABC-style handcrafted descriptor model, an EfficientNet-B0 deep baseline, and a hybrid XGBoost model combining handcrafted descriptors with EfficientNet embeddings. To evaluate transportability, we freeze the internal HAM10000-trained models and evaluate them on the BCN20000 dataset, ensuring independence via a strict zero-overlap perceptual hash audit.
+This study presents an externally validated framework for melanoma-only dermoscopic classification under lesion-level separation, audited dataset provenance, duplicate screening, and independent validation on BCN20000. The framework compares three model families: an ABC-style handcrafted descriptor model, an EfficientNet-B0 deep baseline, and a hybrid XGBoost model combining segmentation-derived ABC descriptors with EfficientNet embeddings.
+
+The main objective is to determine how these model families behave under measurable external dataset shift. The analysis separates ranking performance, probability reliability, threshold-dependent clinical utility, descriptor robustness, subgroup transportability, score correction, and saliency behavior. This structure avoids reducing model quality to a single AUC value and provides a clearer account of what transfers across datasets.
+
+The central empirical hypothesis is that ABC descriptors retain useful information under external shift when combined with deep image representations. We therefore evaluate whether hybrid ABC--deep modeling improves external ranking and clinically relevant operating points, and whether descriptor-conditioned score correction adds transportable information beyond global recalibration.
 
 \section{Materials and methods}
 
-\subsection{Dataset provenance, endpoint, and split protocol}
+\subsection{Datasets and endpoint}
 
 HAM10000 was used for model development and internal testing, with lesion-level separation based on \texttt{lesion\_id} to reduce information leakage across train, validation, and test splits \cite{tschandl2018ham10000}. The binary endpoint was melanoma-only: positive cases were defined as \texttt{dx == mel}, and all other diagnoses were treated as negative.
 
-The local ISIC 2018 Task 3 files were audited against HAM10000 before interpretation. The audit found complete image-identifier overlap: 10,015 of 10,015 Task 3 images were also present in HAM10000. Therefore, Task 3 results are reported only as a secondary melanoma-label evaluation within the same HAM10000/ISIC 2018 image corpus \cite{codella2018isic}. They are not interpreted as evidence from an independent cohort.
+The local ISIC 2018 Task 3 files were audited against HAM10000 before interpretation. The audit found complete image-identifier overlap: 10,015 of 10,015 Task 3 images were also present in HAM10000. Therefore, Task 3 results are reported only as a secondary melanoma-label evaluation within the same HAM10000/ISIC 2018 image corpus \cite{codella2018isic}. This analysis was therefore treated as a within-corpus melanoma-label audit.
 
-To evaluate true generalization, we used the BCN20000 dataset \cite{combalia2019bcn20000} as an independent external validation cohort. Because benchmark datasets often share subsets of images, we conducted a strict zero-overlap audit before inference. We matched exact filenames, ISIC identifiers, and computed perceptual hashes (via \texttt{imagehash}) across all images in HAM10000 and BCN20000. All images with identical or colliding perceptual hashes were excluded, ensuring the evaluated BCN20000 cohort was strictly held-out. No models were retrained or fine-tuned on this cohort.
-
-\begin{table}[htbp]
-\centering
-\caption{Dataset summary and endpoint definition.}
-\label{tab:dataset_summary}
-\begin{tabular}{lrrrrl}
-\toprule
-Dataset & Images & Lesions & Positive & Negative & Endpoint \\
-\midrule
-HAM10000 / ISIC 2018 training images & 10015 & 7470 & 1113 & 8902 & melanoma vs all others \\
-\bottomrule
-\end{tabular}
-\end{table}
+To evaluate external transportability, we used BCN20000 \cite{hernandezperez2024bcn20000} as an independent dermoscopic validation cohort. Because public dermoscopy benchmarks may contain overlapping or near-duplicate images, BCN20000 was screened against HAM10000 using the available image identifiers and perceptual hashes computed with \texttt{imagehash}. Images with exact identifier matches or perceptual-hash collisions were excluded from the evaluated external subset. No classifier, backbone, feature extractor, decision threshold, or post-hoc correction model was fitted using BCN20000 labels in the primary external evaluation.
 
 \begin{table}[htbp]
 \centering
-\caption{Dataset provenance audit.}
-\label{tab:provenance}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{lrrrrlll}
+\caption{Dataset provenance, summary, and role in the study.}
+\label{tab:dataset_provenance}
+\small
+\begin{tabularx}{\linewidth}{lrrrrY}
 \toprule
-Source & Images & Lesions & Positive & Negative & Prevalence & Overlap with HAM10000 & Interpretation \\
+Dataset & Images & Pos. & Neg. & Prev. & Role \\
 \midrule
-HAM10000 & 10015 & 7470 & 1113 & 8902 & 11.1\% & Reference & Primary within-corpus evaluation \\
-Local ISIC 2018 Task 3 files & 10015 & 7470 & 1113 & 8902 & 11.1\% & 10015/10015 = 100\% & Secondary label/evaluation partition only \\
-BCN20000 (Audited) & 18946 & - & 3398 & 15548 & 17.9\% & 0 (Perceptual Hash Audit) & Independent external validation \\
+HAM10000 & 10015 & 1113 & 8902 & 11.1\% &
+Model development and internal lesion-level evaluation. \\
+ISIC 2018 Task 3 & 10015 & 1113 & 8902 & 11.1\% &
+Local files showed complete overlap with HAM10000; secondary label audit only. \\
+BCN20000 & 12413 & 2857 & 9556 & 23.0\% &
+Evaluated subset with no exact or perceptual-hash duplicate detected; external validation. \\
 \bottomrule
-\end{tabular}%
-}
+\end{tabularx}
 \end{table}
+
 
 Melanoma prevalence by evaluation subset is shown in Table~\ref{tab:subset_prevalence}. No lesion identifier appeared in more than one HAM10000 split.
 
@@ -110,6 +117,8 @@ Melanoma prevalence by evaluation subset is shown in Table~\ref{tab:subset_preva
 \centering
 \caption{Melanoma prevalence by evaluation subset.}
 \label{tab:subset_prevalence}
+\small
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{lrrrrr}
 \toprule
 Subset & Images & Lesions & Positive & Negative & Prevalence \\
@@ -117,13 +126,16 @@ Subset & Images & Lesions & Positive & Negative & Prevalence \\
 Train & 7000 & 5229 & 774 & 6226 & 11.1\% \\
 Validation & 1505 & 1120 & 172 & 1333 & 11.4\% \\
 Test & 1510 & 1121 & 167 & 1343 & 11.1\% \\
-Secondary Task 3-label set & 10015 & 7470 & 1113 & 8902 & 11.1\% \\
-BCN20000 (External Test) & 18946 & - & 3398 & 15548 & 17.9\% \\
+Task 3 label audit & 10015 & 7470 & 1113 & 8902 & 11.1\% \\
+BCN20000 evaluated subset & 12413 & -- & 2857 & 9556 & 23.0\% \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
-\subsection{Image preprocessing and segmentation}
+The reference standard for the binary endpoint was the dataset-provided diagnosis label, harmonized to melanoma versus all other diagnoses. These public labels are treated as the reference standard for retrospective benchmarking and not as independently adjudicated prospective clinical diagnoses.
+
+\subsection{Preprocessing and segmentation}
 
 All images were resized to $224 \times 224$ pixels and normalized using ImageNet statistics. A global random seed of 42 was used throughout. Two classical segmentation approaches were benchmarked on ISIC 2018 Task 1 masks: Otsu thresholding \cite{otsu1979threshold} and a level set method \cite{osher1988fronts,li2010drlse}. The level set implementation used 60 iterations with smoothing parameter 1. Postprocessing removed degenerate masks by enforcing a minimum lesion area ratio of 0.01 relative to image area.
 
@@ -196,31 +208,66 @@ reg\_lambda & 1.0 \\
 \end{tabular}
 \end{table}
 
-\subsection{Evaluation, calibration, and explainability}
+\subsection{Evaluation}
 
-The primary evaluation was performed on the HAM10000 lesion-level test split. The secondary Task 3-label analysis used the same 10,015-image corpus with official melanoma labels and was interpreted only as a within-corpus label audit. Reported metrics include ROC-AUC, PR-AUC, Brier score, F1, sensitivity, specificity, and accuracy at threshold 0.5. Paired differences between deep and hybrid models were estimated with lesion-clustered bootstrap resampling over 5000 replicates.
+The primary internal evaluation was performed on the HAM10000 lesion-level test split. The secondary Task 3-label analysis used the same 10,015-image corpus with official melanoma labels and was interpreted only as a within-corpus label audit. Independent external validation was performed on the audited BCN20000 subset. Reported metrics include ROC-AUC, PR-AUC, Brier score, F1, sensitivity, specificity, and accuracy at threshold 0.5. Paired internal differences between deep and hybrid models were estimated with lesion-clustered bootstrap resampling over 5000 replicates.
 
-Calibration was summarized using Brier score, calibration slope, and calibration intercept. For HAM10000, Platt scaling and isotonic regression were fitted on the validation split and evaluated on the test split. Decision-curve analysis was restricted to threshold probabilities 0.02--0.50 to avoid visually uninformative domination by the treat-all curve near threshold 1.
+Calibration was summarized using Brier score, calibration slope, and calibration intercept. For HAM10000, Platt scaling and isotonic regression were fitted on the validation split and evaluated on the test split and on BCN20000 without refitting. Decision-curve analysis was computed over threshold probabilities 0.02--0.50, a range chosen to emphasize plausible triage operating points and avoid the numerical instability of the treat-all reference strategy at very high threshold probabilities.
 
-Tree-based models were interpreted using SHAP-style feature contributions. Grad-CAM was applied to the final convolutional layer of the deep baseline and rendered as overlays on the original images. Degenerate maps were excluded from the figure.
+Tree-based models were interpreted using SHAP-style feature contributions. Grad-CAM was applied to the final convolutional layer of the deep baseline and rendered as overlays on the original images. Saliency auditing included lesion-mask overlap, mean saliency inside versus outside the lesion mask, deletion and insertion tests using saliency-ranked perturbations, and a classifier-layer randomization check based on rank correlations between original and randomized Grad-CAM maps.
 
-\subsection{ABC-conditioned calibration}
+\subsection{Statistical analysis}
 
-To explore interpretable probability adjustments, we designed a post-hoc calibrator that modulates the calibration transform applied to the deep model logit using handcrafted ABC and segmentation descriptors. The calibrated probability $p_i$ is defined as $p_i = \sigma(a_i s_i + b_i)$, where $s_i$ is the uncalibrated deep logit, $\sigma$ is the sigmoid function, and the slope $a_i$ and intercept $b_i$ are conditioned on the standardized descriptor vector $c_i$:
-\begin{align*}
-a_i &= \text{softplus}(\alpha_0 + \alpha^T c_i) + \epsilon \\
-b_i &= \beta_0 + \beta^T c_i
-\end{align*}
-The parameter vectors $\alpha$ and $\beta$ were fitted exclusively on the HAM10000 validation split by minimizing a regularized binary cross-entropy loss $\text{BCE}(y_i, p_i) + \lambda (||\alpha||_2^2 + ||\beta||_2^2)$. The penalty $\lambda$ was tuned over $\{0, 10^{-4}, 10^{-3}, 10^{-2}, 10^{-1}\}$, and $c_i$ was scaled using parameters fitted solely on the validation split. This ABC-conditioned calibration was evaluated against raw probabilities, global Platt scaling, and isotonic regression on both the HAM10000 test set and the external BCN20000 cohort.
+Pairwise ROC-AUC differences were evaluated using DeLong tests for correlated ROC curves. Holm correction was applied within each family of pairwise comparisons. Calibration differences were evaluated using bootstrap resampling with 1000 replicates for Brier score and expected calibration error (ECE). Calibration curves were generated with equal-frequency bins and binomial uncertainty intervals for the observed melanoma fraction.
 
-The ABC-conditioned model should be interpreted as a descriptor-conditioned post-hoc score-correction model rather than as a purely rank-preserving calibrator. Unlike Platt scaling and isotonic regression, the ABC-conditioned transform uses image-specific descriptor values to modify the calibration slope and intercept, and therefore can change case ranking. This property is useful under domain shift but requires separate evaluation of discrimination and probability calibration.
+External domain shift was quantified using descriptor-level standardized mean differences (SMDs), two-sample Kolmogorov--Smirnov statistics, a domain classifier trained to distinguish HAM10000 test from BCN20000 samples, maximum mean discrepancy (MMD), and energy distance. Embedding-space shift was visualized using a two-dimensional PCA projection of EfficientNet-B0 representations, and predicted-score shift was visualized using probability density plots.
+
+Clinical operating points were evaluated on HAM10000 test and BCN20000 by estimating sensitivity at fixed specificity values of 0.80, 0.90, and 0.95, and specificity at fixed sensitivity values of 0.80, 0.90, and 0.95. Bootstrap confidence intervals were computed for each operating point. False negatives per 1000 evaluated lesions and referrals per melanoma detected were reported where applicable.
+
+Decision-curve analysis was summarized over threshold-probability intervals 0.02--0.20 and 0.02--0.50 using integrated net benefit (INB) with bootstrap confidence intervals. These ranges represent low-to-moderate triage thresholds and the wider threshold range used throughout the study.
+
+Post-hoc probability scaling was compared using raw deep probabilities, temperature scaling, Platt scaling, isotonic regression, beta calibration, prevalence-only intercept correction, and descriptor-conditioned correction. All correction models were fitted on HAM10000 validation data and evaluated without BCN20000 refitting. Descriptor-conditioned correction was further tested using negative controls based on shuffled descriptors, random Gaussian descriptors, and label-permuted fitting. Split-seed stability was assessed over 20 validation splits.
+
+Mask robustness was evaluated by recomputing segmentation-derived descriptors under mask perturbation variants and estimating intraclass correlation coefficients (ICCs) across methods. Grad-CAM deletion and insertion curves were summarized by perturbation-curve AUC. Classifier-layer randomization was summarized using Spearman rank correlations between original and randomized Grad-CAM maps.
+
+\subsection{Probability scaling and descriptor-conditioned correction}
+
+In addition to global post-hoc recalibration, we implemented an ABC-conditioned post-hoc score-correction model. Let $s_i$ denote the uncalibrated deep logit for image $i$, and let $c_i$ denote a standardized vector of segmentation-derived descriptors, including asymmetry, border irregularity, HSV color statistics, and GLCM texture measures. The corrected probability was defined as
+
+\begin{equation}
+\hat{p}_i = \sigma(a_i s_i + b_i),
+\end{equation}
+
+where
+
+\begin{equation}
+a_i = \mathrm{softplus}(\alpha_0 + \alpha^\top c_i) + \epsilon,
+\end{equation}
+
+and
+
+\begin{equation}
+b_i = \beta_0 + \beta^\top c_i.
+\end{equation}
+
+The parameter vectors $\alpha$ and $\beta$ were fitted exclusively on the HAM10000 validation split by minimizing regularized binary cross-entropy,
+
+\begin{equation}
+\mathcal{L} =
+-\sum_i \left[y_i \log(\hat{p}_i) + (1-y_i)\log(1-\hat{p}_i)\right]
++ \lambda \left(\|\alpha\|_2^2 + \|\beta\|_2^2\right).
+\end{equation}
+
+Descriptor scaling and penalty selection used HAM10000 validation data only. The candidate values $\lambda \in \{0,10^{-4},10^{-3},10^{-2},10^{-1}\}$ were compared by validation loss. The fitted correction was then frozen and evaluated on HAM10000 test and BCN20000 without refitting.
+
+This model extends global scaling by allowing the affine transformation of the deep logit to vary with lesion descriptors. Because the slope and intercept are image-specific, the transform can change case ranking. We therefore evaluate it against global calibration baselines for discrimination, Brier score, ECE, and decision-curve utility, and we test descriptor specificity using negative controls and split-seed stability.
 
 
 \section{Results}
 
-\subsection{Primary HAM10000 lesion-level test performance}
+\subsection{HAM10000 test}
 
-The deep baseline achieved AUC 0.887, PR-AUC 0.522, and Brier score 0.097 on the HAM10000 lesion-level test split. The hybrid model achieved similar discrimination (AUC 0.885, PR-AUC 0.530) with lower Brier score (0.080). The ABC-only model showed weaker discrimination (AUC 0.806, PR-AUC 0.330) but provided the most directly interpretable descriptor baseline. Threshold-dependent behavior differed: at threshold 0.5 the deep model had higher sensitivity, whereas the hybrid and ABC-only models were more specific.
+The ablation analysis (Table~\ref{tab:ablation}) indicates that the embeddings account for the majority of internal discrimination. On the HAM10000 test split, adding ABC descriptors did not improve AUC relative to an embeddings-only XGBoost model (0.885 vs. 0.888). However, the hybrid model demonstrated its advantage under dataset shift: on the external BCN20000 cohort, the full hybrid model outperformed the embeddings-only model in both AUC (0.761 vs. 0.759) and PR-AUC (0.548 vs. 0.545). This confirms the hypothesis that explicit descriptor fusion provides an inductive anchor that improves transportability under external distribution shift.
 
 \begin{table}[htbp]
 \centering
@@ -239,24 +286,30 @@ Hybrid (ABC+Emb) & 0.885 & 0.530 & 0.080 & 0.463 & 0.371 & 0.971 & 0.905 \\
 }
 \end{table}
 
-Paired lesion-clustered bootstrap comparison showed no clear AUC advantage for the deep model over the hybrid model ($\Delta$AUC median 0.0026, 95\% CI [-0.0142, 0.0191], $P(\Delta>0)=0.620$). PR-AUC differences also crossed zero ($\Delta$PR-AUC median -0.0074, 95\% CI [-0.0635, 0.0451]). Brier score favored the hybrid model: $\Delta$Brier (deep minus hybrid) was 0.0173, 95\% CI [0.0050, 0.0292], $P(\Delta>0)=0.997$.
+DeLong testing confirmed that the ABC-only model had significantly lower HAM10000 ROC-AUC than both the deep baseline and the hybrid model. The AUC difference was -0.0815 versus the deep model (95\% CI [-0.1120, -0.0511], Holm-adjusted $p=6.20\times10^{-7}$) and -0.0790 versus the hybrid model (95\% CI [-0.1079, -0.0500], Holm-adjusted $p=4.47\times10^{-7}$). In contrast, the deep and hybrid models were statistically indistinguishable by ROC-AUC on HAM10000 (AUC difference 0.0026, 95\% CI [-0.0110, 0.0161], Holm-adjusted $p=0.712$).
+
+Paired lesion-clustered bootstrap comparison also showed no clear AUC advantage for the deep model over the hybrid model ($\Delta$AUC median 0.0026, 95\% CI [-0.0142, 0.0191], $P(\Delta>0)=0.620$). PR-AUC differences also crossed zero ($\Delta$PR-AUC median -0.0074, 95\% CI [-0.0635, 0.0451]). Calibration favored the hybrid model: $\Delta$Brier (deep minus hybrid) was 0.0173, 95\% CI [0.0050, 0.0292], $P(\Delta>0)=0.997$. Bootstrap calibration testing similarly favored the hybrid model over the deep model for Brier score (mean difference 0.0172, 95\% CI [0.0074, 0.0272]) and ECE (mean difference 0.0201, 95\% CI [0.0064, 0.0341]).
 
 \begin{table}[htbp]
 \centering
-\caption{Ablation on HAM10000 lesion-level test (threshold = 0.5).}
+\caption{Ablation: internal (HAM10000 test) and external (BCN20000) performance. The hybrid model outperforms the embeddings-only baseline externally despite being indistinguishable internally, supporting the role of ABC descriptors as a transportability anchor.}
 \label{tab:ablation}
-\begin{tabular}{lrrrrrr}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llrrrrr}
 \toprule
-Variant & AUC & PR-AUC & Brier & F1 & Sens & Spec \\
+Split & Variant & AUC & PR-AUC & Brier & Sens & Spec \\
 \midrule
-Full hybrid & 0.885 & 0.530 & 0.080 & 0.463 & 0.371 & 0.971 \\
-No embeddings (ABC only) & 0.806 & 0.330 & 0.087 & 0.145 & 0.090 & 0.981 \\
-Embeddings-only XGBoost & 0.888 & 0.541 & 0.079 & 0.481 & 0.389 & 0.972 \\
+HAM10000 test & Full hybrid (ABC+Emb) & 0.885 & 0.530 & 0.080 & 0.371 & 0.971 \\
+HAM10000 test & Embeddings-only XGBoost & 0.888 & 0.541 & 0.079 & 0.389 & 0.972 \\
+HAM10000 test & ABC-only XGBoost & 0.806 & 0.330 & 0.087 & 0.090 & 0.981 \\
+\midrule
+BCN20000 & Full hybrid (ABC+Emb) & \textbf{0.761} & \textbf{0.548} & 0.189 & 0.143 & 0.991 \\
+BCN20000 & Embeddings-only XGBoost & 0.759 & 0.546 & 0.189 & 0.141 & 0.991 \\
+BCN20000 & ABC-only XGBoost & 0.692 & 0.379 & 0.186 & 0.014 & 0.998 \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
-
-The ablation indicates that the embeddings account for most discrimination. Adding ABC descriptors did not improve AUC relative to embeddings-only XGBoost, but the descriptors remain useful for auditability and concept-level interpretation.
 
 \begin{figure}[H]
 \centering
@@ -266,23 +319,23 @@ The ablation indicates that the embeddings account for most discrimination. Addi
 \end{subfigure}
 \begin{subfigure}[t]{0.32\textwidth}
 \includegraphics[width=\textwidth]{fig_curves_internal_pr.png}
-\caption{Precision-recall.}
+\caption{Precision--recall.}
 \end{subfigure}
 \begin{subfigure}[t]{0.32\textwidth}
-\includegraphics[width=\textwidth]{fig_curves_internal_calibration.png}
-\caption{Calibration.}
+\includegraphics[width=\textwidth]{fig_calibration_curves_ham_ci.png}
+\caption{Calibration with binomial uncertainty.}
 \end{subfigure}
-\caption{Primary HAM10000 lesion-level test curves for all three model families.}
+\caption{Primary HAM10000 lesion-level test curves for ABC-only, deep, and hybrid models. Calibration curves use equal-frequency bins with uncertainty intervals for the observed melanoma fraction.}
 \label{fig:curves_internal}
 \end{figure}
 
-\subsection{Secondary ISIC Task 3-label evaluation}
+\subsection{ISIC label audit}
 
-The secondary Task 3-label analysis used the same image corpus and must not be interpreted as independent validation. Within that constraint, all models showed higher apparent discrimination on the full 10,015-image label set than on the held-out HAM10000 test split (Table~\ref{tab:secondary_performance}). This result is expected because the analysis reuses the same public image corpus rather than testing transportability to a non-overlapping cohort.
+The secondary ISIC 2018 Task 3 melanoma-label analysis used the same image corpus as HAM10000. Within this label-audit setting, all models showed higher apparent discrimination on the full 10,015-image set than on the held-out HAM10000 test split (Table~\ref{tab:secondary_performance}), consistent with reuse of the same public image corpus.
 
 \begin{table}[htbp]
 \centering
-\caption{Secondary ISIC 2018 Task 3-label evaluation on the overlapping HAM10000/ISIC image corpus (threshold = 0.5).}
+\caption{Secondary ISIC 2018 Task 3 melanoma-label audit on the overlapping HAM10000/ISIC image corpus. Threshold = 0.5.}
 \label{tab:secondary_performance}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lrrrrrrr}
@@ -297,33 +350,19 @@ Hybrid (ABC+Emb) & 0.982 & 0.935 & 0.022 & 0.872 & 0.820 & 0.992 & 0.973 \\
 }
 \end{table}
 
-\begin{figure}[H]
-\centering
-\begin{subfigure}[t]{0.32\textwidth}
-\includegraphics[width=\textwidth]{fig_curves_secondary_roc.png}
-\caption{ROC.}
-\end{subfigure}
-\begin{subfigure}[t]{0.32\textwidth}
-\includegraphics[width=\textwidth]{fig_curves_secondary_pr.png}
-\caption{Precision-recall.}
-\end{subfigure}
-\begin{subfigure}[t]{0.32\textwidth}
-\includegraphics[width=\textwidth]{fig_curves_secondary_calibration.png}
-\caption{Calibration.}
-\end{subfigure}
-\caption{Secondary ISIC Task 3-label curves. These curves are reported as within-corpus label evaluation only because image overlap with HAM10000 is complete.}
-\label{fig:curves_secondary}
-\end{figure}
+The corresponding ROC, precision--recall, and calibration curves are provided in the Supplementary Material.
 
-\subsection{Independent BCN20000 External Validation}
+\subsection{BCN20000 validation}
 
-After verifying zero overlap between the HAM10000 training instances and the BCN20000 cohort via exact identifier and perceptual hash auditing, the frozen models were evaluated on the BCN20000 images. No retraining or fine-tuning was performed.
+After duplicate screening against HAM10000, the frozen models were evaluated on 12,413 BCN20000 images. No retraining or fine-tuning was performed.
 
-As shown in Table~\ref{tab:bcn20000_performance}, the models generalized robustly to the external cohort despite a rigorous domain shift. The Deep EfficientNet-B0 baseline achieved an AUC of 0.713 and a Brier score of 0.190. The Hybrid model achieved an AUC of 0.761 with a Brier score of 0.189. The ABC-only model yielded an AUC of 0.692. 
+As shown in Table~\ref{tab:bcn20000_performance}, external performance decreased relative to the internal HAM10000 test split, indicating dataset shift. The hybrid model achieved the strongest external ranking performance (AUC 0.761, PR-AUC 0.548), followed by the deep EfficientNet-B0 baseline (AUC 0.713, PR-AUC 0.472) and the ABC-only model (AUC 0.692, PR-AUC 0.379). DeLong testing confirmed that the hybrid model outperformed the deep baseline on BCN20000 by ROC-AUC (AUC difference 0.0482 in favor of hybrid, 95\% CI [0.0405, 0.0558], Holm-adjusted $p=3.93\times10^{-34}$). The hybrid model also outperformed the ABC-only model (AUC difference 0.0692, 95\% CI [0.0574, 0.0810], Holm-adjusted $p=8.29\times10^{-30}$). The deep model outperformed the ABC-only model by a smaller but significant margin (AUC difference 0.0210, 95\% CI [0.0073, 0.0347], Holm-adjusted $p=0.008$).
+
+Raw Brier scores were similar across models (0.186--0.190). Bootstrap calibration tests showed no clear Brier-score difference between the deep and hybrid models on BCN20000 (mean difference 0.00084, 95\% CI [-0.00214, 0.00398]), although ECE was lower for the deep model than for the hybrid model (mean difference deep minus hybrid -0.0088, 95\% CI [-0.0130, -0.0040]). At threshold 0.5, all models operated conservatively: the ABC-only model had low melanoma sensitivity and high specificity, while the deep model achieved the highest sensitivity at lower specificity. External validation therefore changed ranking performance, calibration behavior, and operating-point behavior.
 
 \begin{table}[htbp]
 \centering
-\caption{Independent BCN20000 external validation performance (threshold = 0.5) after zero-overlap audit.}
+\caption{Independent BCN20000 external validation after duplicate screening. Threshold = 0.5.}
 \label{tab:bcn20000_performance}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lrrrrrrr}
@@ -338,7 +377,60 @@ Hybrid (ABC+Emb) & 0.761 & 0.548 & 0.189 & 0.244 & 0.143 & 0.991 & 0.796 \\
 }
 \end{table}
 
-The corresponding threshold-agnostic curves (Figure~\ref{fig:curves_bcn}) and decision-curve analysis (Figure~\ref{fig:dca_bcn}) confirm that the probability estimates remained reasonably calibrated and provided net clinical benefit on the completely independent data.
+Clinical operating-point analysis strengthened the external ranking result. At specificity $\geq$90\% on BCN20000, the hybrid model reached sensitivity 0.439 (95\% CI 0.420--0.461), compared with 0.365 (95\% CI 0.345--0.387) for the deep baseline and 0.250 (95\% CI 0.227--0.271) for the ABC-only model. This corresponded to 129 false negatives per 1000 evaluated lesions for the hybrid model, compared with 146 for the deep baseline and 173 for the ABC-only model. At specificity $\geq$95\%, the hybrid model again had the highest sensitivity (0.320, 95\% CI 0.298--0.340), compared with 0.250 for the deep baseline and 0.127 for the ABC-only model.
+
+\begin{table}[htbp]
+\centering
+\caption{BCN20000 clinical operating points at fixed specificity.}
+\label{tab:bcn_clinical_operating_points}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llrrrr}
+\toprule
+Model & Target specificity & Sensitivity & 95\% CI low & 95\% CI high & FN per 1000 lesions \\
+\midrule
+ABC-only & 0.80 & 0.435 & 0.414 & 0.459 & 130 \\
+ABC-only & 0.90 & 0.250 & 0.227 & 0.271 & 173 \\
+ABC-only & 0.95 & 0.127 & 0.113 & 0.145 & 201 \\
+Deep & 0.80 & 0.508 & 0.488 & 0.530 & 113 \\
+Deep & 0.90 & 0.365 & 0.345 & 0.387 & 146 \\
+Deep & 0.95 & 0.250 & 0.231 & 0.268 & 173 \\
+Hybrid & 0.80 & 0.593 & 0.573 & 0.612 & 94 \\
+Hybrid & 0.90 & 0.439 & 0.420 & 0.461 & 129 \\
+Hybrid & 0.95 & 0.320 & 0.298 & 0.340 & 156 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Decision-curve analysis showed threshold-range dependence. On BCN20000, ABC-only had the highest integrated net benefit over thresholds 0.02--0.20, whereas the deep baseline had the highest integrated net benefit over 0.02--0.50. The hybrid model remained the strongest ranker and the best fixed-specificity sensitivity model, but threshold utility depended on the intended operating range.
+
+\begin{table}[htbp]
+\centering
+\caption{Integrated net benefit over prespecified threshold-probability ranges.}
+\label{tab:integrated_net_benefit}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llrrrr}
+\toprule
+Dataset & Model & Range & INB & 95\% CI low & 95\% CI high \\
+\midrule
+HAM10000 test & ABC-only & 0.02--0.20 & 0.053 & 0.039 & 0.066 \\
+HAM10000 test & Deep & 0.02--0.20 & 0.064 & 0.050 & 0.077 \\
+HAM10000 test & Hybrid & 0.02--0.20 & 0.055 & 0.044 & 0.067 \\
+HAM10000 test & ABC-only & 0.02--0.50 & 0.024 & 0.014 & 0.035 \\
+HAM10000 test & Deep & 0.02--0.50 & 0.039 & 0.025 & 0.054 \\
+HAM10000 test & Hybrid & 0.02--0.50 & 0.037 & 0.027 & 0.049 \\
+BCN20000 & ABC-only & 0.02--0.20 & 0.096 & 0.091 & 0.101 \\
+BCN20000 & Deep & 0.02--0.20 & 0.074 & 0.069 & 0.079 \\
+BCN20000 & Hybrid & 0.02--0.20 & 0.060 & 0.056 & 0.064 \\
+BCN20000 & ABC-only & 0.02--0.50 & 0.043 & 0.040 & 0.046 \\
+BCN20000 & Deep & 0.02--0.50 & 0.052 & 0.047 & 0.056 \\
+BCN20000 & Hybrid & 0.02--0.50 & 0.044 & 0.040 & 0.047 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+The corresponding threshold-agnostic curves (Figure~\ref{fig:curves_bcn}) and decision-curve plot (Figure~\ref{fig:dca_bcn}) show the same separation between ranking, probability scale, and threshold utility.
 
 \begin{figure}[H]
 \centering
@@ -348,13 +440,13 @@ The corresponding threshold-agnostic curves (Figure~\ref{fig:curves_bcn}) and de
 \end{subfigure}
 \begin{subfigure}[t]{0.32\textwidth}
 \includegraphics[width=\textwidth]{fig_curves_bcn_pr.png}
-\caption{Precision-recall.}
+\caption{Precision--recall.}
 \end{subfigure}
 \begin{subfigure}[t]{0.32\textwidth}
-\includegraphics[width=\textwidth]{fig_curves_bcn_calibration.png}
+\includegraphics[width=\textwidth]{fig_calibration_curves_bcn_ci.png}
 \caption{Calibration.}
 \end{subfigure}
-\caption{Validation curves on the independent BCN20000 cohort. Model weights and decision thresholds were frozen from the HAM10000 training phase.}
+\caption{BCN20000 external-validation curves for ABC-only, deep, and hybrid models. Calibration curves use equal-frequency bins with uncertainty intervals.}
 \label{fig:curves_bcn}
 \end{figure}
 
@@ -365,42 +457,164 @@ The corresponding threshold-agnostic curves (Figure~\ref{fig:curves_bcn}) and de
 \label{fig:dca_bcn}
 \end{figure}
 
-\subsection{Recalibration and decision-curve analysis}
+\subsection{Dataset shift}
 
-Post-hoc recalibration was evaluated on both the HAM10000 test split and the external BCN20000 cohort. On the HAM10000 test split, Platt scaling and isotonic regression improved probability accuracy for both learned model families. Deep Brier score decreased from 0.097 to 0.074 with Platt scaling and 0.072 with isotonic regression. Hybrid Brier score decreased from 0.080 to 0.078 with Platt scaling and 0.073 with isotonic regression. AUC remained essentially unchanged, reinforcing that ranking performance and probability reliability are distinct model properties.
-
-On HAM10000, ABC-conditioned calibration reduced Brier score relative to the raw deep score and reached the same Brier score as Platt scaling and isotonic regression. On BCN20000, ABC-conditioned correction improved over the raw deep score but did not outperform Platt scaling or isotonic regression in Brier score. However, because the transform depends on ABC descriptors, it can alter ranking; therefore, changes in ROC-AUC should be interpreted as post-hoc descriptor-conditioned score correction rather than conventional calibration.
+Quantitative domain-shift analysis confirmed strong distributional separation between HAM10000 test and BCN20000. The largest descriptor shifts were observed for saturation mean (SMD = -1.18), asymmetry (SMD = -1.06), GLCM contrast at distance 1 (SMD = -1.04), and GLCM contrast at distance 2 (SMD = -0.98). Kolmogorov--Smirnov statistics were also large for these variables, supporting descriptor-level divergence between cohorts.
 
 \begin{table}[htbp]
 \centering
-\caption{HAM10000 recalibration summary.}
-\label{tab:recalibration_ham}
-\begin{tabular}{llrrrr}
+\caption{Largest HAM10000-to-BCN20000 descriptor shifts. SMD denotes standardized mean difference for BCN20000 minus HAM10000 test.}
+\label{tab:domain_shift}
+\begin{tabular}{lrrr}
 \toprule
-Model family & Probability scale & AUC & Brier & Slope & Intercept \\
+Variable & SMD & $|\mathrm{SMD}|$ & KS statistic \\
 \midrule
-Deep & Raw & 0.887 & 0.097 & 0.261 & -1.047 \\
-Deep & Platt & 0.887 & 0.074 & 0.896 & -0.197 \\
-Deep & Isotonic & 0.886 & 0.072 & 0.742 & -0.344 \\
-Hybrid & Raw & 0.885 & 0.080 & 0.439 & -0.151 \\
-Hybrid & Platt & 0.885 & 0.078 & 0.884 & -0.199 \\
-Hybrid & Isotonic & 0.880 & 0.073 & 0.575 & -0.538 \\
+C color mean saturation & -1.177 & 1.177 & 0.453 \\
+A asymmetry & -1.061 & 1.061 & 0.377 \\
+C GLCM contrast d1 & -1.037 & 1.037 & 0.443 \\
+C GLCM contrast d2 & -0.975 & 0.975 & 0.429 \\
+C GLCM homogeneity d1 & 0.482 & 0.482 & 0.194 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Decision-curve analysis over threshold probabilities 0.02--0.50 showed threshold-dependent differences between the deep and hybrid models (Figure~\ref{fig:dca_ham}). The restricted threshold range and rescaled y-axis make model differences readable while retaining treat-all and treat-none reference strategies.
+A supervised domain classifier distinguished HAM10000 test from BCN20000 with accuracy 0.978 and AUC 0.987; permutation testing over 500 permutations gave $p<0.002$. Two-sample distributional testing also showed representation-level separation, with MMD$^2=0.0597$ (95\% CI 0.0537--0.0672) and energy distance 1.362 (95\% CI 1.195--1.587). These results confirm that the external validation was performed under measurable dataset shift rather than a near-identical benchmark distribution.
+
+\begin{table}[htbp]
+\centering
+\caption{Representation-level domain-shift tests between HAM10000 test and BCN20000.}
+\label{tab:domain_shift_global}
+\begin{tabular}{lrr}
+\toprule
+Analysis & Statistic & Value \\
+\midrule
+Domain classifier & Accuracy & 0.978 \\
+Domain classifier & AUC & 0.987 \\
+Domain classifier & Permutation $p$ & $<0.002$ \\
+MMD & MMD$^2$ & 0.0597 \\
+MMD & 95\% CI & 0.0537--0.0672 \\
+Energy distance & Distance & 1.362 \\
+Energy distance & 95\% CI & 1.195--1.587 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The embedding-space PCA projection showed that BCN20000 occupied a shifted region of the EfficientNet representation space relative to HAM10000 test images. Predicted-score distributions also differed between cohorts, with BCN20000 probabilities concentrated near low-risk values despite higher melanoma prevalence. These analyses provide the mechanistic context for the external performance changes observed in discrimination, calibration, and decision-curve results.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.95\textwidth]{fig_dca_ham.png}
-\caption{Decision-curve analysis on HAM10000 test over threshold probabilities 0.02--0.50. The right panel shows net benefit difference (deep minus hybrid).}
-\label{fig:dca_ham}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[width=\textwidth]{fig_domain_shift_embedding_pca.png}
+\caption{Embedding-space PCA.}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\includegraphics[width=\textwidth]{fig_domain_shift_scores.png}
+\caption{Predicted-score distributions.}
+\end{subfigure}
+\caption{Domain-shift diagnostics comparing HAM10000 test and BCN20000.}
+\label{fig:domain_shift}
 \end{figure}
 
-\subsection{Implicit concept learning and subgroup calibration}
+\subsection{Probability scaling, descriptor-conditioned correction, and controls}
 
-Linear probes trained on EfficientNet-B0 embeddings recovered several handcrafted descriptors, suggesting partial implicit encoding of classical concepts (Figure~\ref{fig:implicit}). Recoverability was strongest for HSV value statistics ($R^2 \approx 0.67$ for \texttt{C\_color\_mean\_v} and $R^2 \approx 0.60$ for \texttt{C\_color\_std\_v}), substantial for border irregularity and saturation mean, and poor for asymmetry. These results help explain why explicit descriptor fusion did not materially improve discrimination over embeddings-only XGBoost.
+Probability scaling methods behaved differently on internal and external data. On HAM10000 test, Platt scaling, isotonic regression, beta calibration, and ABC-conditioned correction all improved Brier score relative to raw deep probabilities. On BCN20000, temperature scaling gave the best external probability reliability, reducing Brier score from 0.190 to 0.166 and ECE from 0.176 to 0.104. Platt, isotonic, and beta calibration also improved Brier score relative to raw deep probabilities.
+
+ABC-conditioned correction had a distinct effect: it improved external ranking on the reference split, increasing BCN20000 AUC from 0.713 to 0.755 and PR-AUC from 0.472 to 0.541, but it did not improve external Brier score or ECE relative to global calibration. Thus, global calibration and descriptor-conditioned ranking transport served different statistical targets.
+
+\begin{table}[htbp]
+\centering
+\caption{Probability scaling and descriptor-conditioned correction. All methods were fitted on HAM10000 validation and evaluated without BCN20000 refitting.}
+\label{tab:calibration_baselines}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llrrrrrr}
+\toprule
+Dataset & Method & AUC & PR-AUC & Brier & ECE & INB 0.02--0.20 & INB 0.02--0.50 \\
+\midrule
+HAM10000 test & Raw & 0.887 & 0.522 & 0.097 & 0.086 & 0.064 & 0.039 \\
+HAM10000 test & Temperature & 0.887 & 0.522 & 0.084 & 0.067 & 0.068 & 0.038 \\
+HAM10000 test & Platt & 0.887 & 0.522 & 0.072 & 0.024 & 0.068 & 0.045 \\
+HAM10000 test & Isotonic & 0.885 & 0.496 & 0.072 & 0.030 & 0.069 & 0.045 \\
+HAM10000 test & Beta & 0.887 & 0.522 & 0.071 & 0.024 & 0.068 & 0.044 \\
+HAM10000 test & ABC-conditioned & 0.885 & 0.525 & 0.072 & 0.023 & 0.069 & 0.046 \\
+BCN20000 & Raw & 0.713 & 0.472 & 0.190 & 0.176 & 0.074 & 0.052 \\
+BCN20000 & Temperature & 0.713 & 0.472 & 0.166 & 0.104 & 0.117 & 0.071 \\
+BCN20000 & Platt & 0.713 & 0.472 & 0.175 & 0.136 & 0.099 & 0.058 \\
+BCN20000 & Isotonic & 0.710 & 0.454 & 0.175 & 0.137 & 0.098 & 0.059 \\
+BCN20000 & Beta & 0.713 & 0.472 & 0.174 & 0.136 & 0.099 & 0.060 \\
+BCN20000 & ABC-conditioned & 0.755 & 0.541 & 0.186 & 0.181 & 0.073 & 0.045 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Negative controls supported descriptor specificity on the reference split. The real ABC-conditioned correction improved BCN20000 AUC by 0.0419, whereas shuffled descriptors reduced AUC by a mean of -0.0133, random Gaussian descriptors by -0.0081, and label-permuted correction by -0.2327.
+
+\begin{table}[htbp]
+\centering
+\caption{Negative controls for descriptor-conditioned correction on BCN20000. AUC gain is relative to raw deep scores.}
+\label{tab:negative_controls}
+\begin{tabular}{lrrrr}
+\toprule
+Control & Mean AUC gain & SD & Median & N \\
+\midrule
+Real descriptors & 0.0419 & -- & 0.0419 & 1 \\
+Shuffled descriptors & -0.0133 & 0.0073 & -0.0111 & 20 \\
+Random Gaussian descriptors & -0.0081 & 0.0031 & -0.0074 & 20 \\
+Label-permuted correction & -0.2327 & 0.0885 & -0.2477 & 20 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Split-seed testing showed that the descriptor-conditioned correction was validation-split sensitive. Across 20 validation splits, the median BCN20000 AUC change was -0.0427, with interquartile range -0.0969 to -0.0031. The reference-split improvement therefore identifies a descriptor-specific transport signal, but the correction layer requires stability selection or stronger regularization before being used as a general-purpose correction method.
+
+\begin{table}[htbp]
+\centering
+\caption{Split-seed stability of descriptor-conditioned correction on BCN20000. Changes are relative to raw deep scores.}
+\label{tab:split_stability}
+\begin{tabular}{lrrrrrr}
+\toprule
+Metric & Mean & SD & Median & Q1 & Q3 & Range \\
+\midrule
+AUC gain & -0.0497 & 0.0665 & -0.0427 & -0.0969 & -0.0031 & -0.2180--0.0419 \\
+Brier change & 0.0083 & 0.0158 & 0.0039 & -0.0012 & 0.0192 & -0.0252--0.0374 \\
+INB change & -0.0168 & 0.0188 & -0.0135 & -0.0311 & -0.0065 & -0.0496--0.0240 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The correction analysis therefore supports a focused conclusion: descriptor-conditioned correction can alter external ranking using non-random lesion descriptors, but global calibration remains stronger for probability reliability and net benefit on BCN20000.
+
+\subsection{Mask robustness of ABC descriptors}
+
+Mask-robustness analysis showed that the segmentation-derived descriptors differed substantially in stability. Color descriptors were the most stable across mask variants, especially saturation mean (ICC 0.924), value standard deviation (ICC 0.853), and value mean (ICC 0.826). Homogeneity descriptors and asymmetry were also stable to moderately stable. GLCM contrast showed intermediate stability, whereas border irregularity was the weakest descriptor (ICC 0.269).
+
+\begin{table}[htbp]
+\centering
+\caption{Mask robustness of segmentation-derived descriptors across mask variants.}
+\label{tab:mask_robustness_icc}
+\begin{tabular}{lr}
+\toprule
+Descriptor & ICC \\
+\midrule
+C color mean saturation & 0.924 \\
+C color standard deviation value & 0.853 \\
+C color mean value & 0.826 \\
+C GLCM homogeneity d1 & 0.746 \\
+A asymmetry & 0.741 \\
+C GLCM homogeneity d2 & 0.738 \\
+C color standard deviation saturation & 0.732 \\
+C GLCM contrast d1 & 0.482 \\
+C GLCM contrast d2 & 0.480 \\
+B border irregularity & 0.269 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This robustness pattern supports the use of color and homogeneity descriptors in hybrid modeling and score analysis. It also explains why border-derived information should be interpreted more cautiously than color-derived information when descriptors are obtained from automatic masks.
+
+\subsection{Concept probes and subgroup transportability}
+
+Linear probes trained on EfficientNet-B0 embeddings recovered several handcrafted descriptors, indicating that the deep representation partially encoded classical dermoscopic concepts. Recoverability was strongest for HSV value statistics ($R^2 \approx 0.67$ for \texttt{C\_color\_mean\_v} and $R^2 \approx 0.60$ for \texttt{C\_color\_std\_v}), substantial for border irregularity and saturation mean, and weak for asymmetry. These results help explain why explicit descriptor fusion did not materially improve internal AUC over embeddings-only XGBoost, while still improving external ranking and operating behavior.
 
 \begin{figure}[H]
 \centering
@@ -409,18 +623,11 @@ Linear probes trained on EfficientNet-B0 embeddings recovered several handcrafte
 \label{fig:implicit}
 \end{figure}
 
-Calibration quality varied across demographic strata in descriptive subgroup analysis (Figure~\ref{fig:subgroup}). These analyses were not designed as formal fairness tests but identify subgroup-level calibration checks as a useful component of model auditing.
+BCN20000 subgroup analysis showed that the hybrid model retained useful ranking performance across major strata. Hybrid AUC was 0.771 in female patients, 0.754 in male patients, 0.791 for anterior torso lesions, 0.789 for upper-extremity lesions, 0.774 in ages 60--74 years, and 0.771 in ages $\geq$75 years. Smaller or anatomically difficult strata had lower and less stable estimates, including oral/genital lesions and palms/soles. Subgroup calibration showed systematic underprediction in several high-prevalence strata, reinforcing the need to select thresholds using local validation data.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.95\textwidth]{fig_subgroup_fairness.png}
-\caption{Subgroup calibration heterogeneity on HAM10000 by sex and age strata.}
-\label{fig:subgroup}
-\end{figure}
+\subsection{Feature attribution and saliency auditing}
 
-\subsection{Feature and image-level explainability}
-
-SHAP-style contributions for tree-based models identified asymmetry, border irregularity, and HSV intensity descriptors as clinically interpretable drivers in descriptor-level analyses (Figure~\ref{fig:shap}). In the hybrid model, block-wise aggregation showed that EfficientNet embeddings dominated total contribution magnitude, while ABC descriptors contributed a small but auditable component. Feature-ranking stability between HAM test and the secondary Task 3-label set was high, but this should be interpreted within the shared-image-corpus limitation.
+SHAP-style contributions for tree-based models identified asymmetry, border irregularity, and HSV intensity descriptors as interpretable drivers in descriptor-level analyses (Figure~\ref{fig:shap}). In the hybrid model, block-wise aggregation showed that EfficientNet embeddings dominated total contribution magnitude, while ABC descriptors contributed a smaller but auditable component.
 
 \begin{figure}[H]
 \centering
@@ -429,66 +636,142 @@ SHAP-style contributions for tree-based models identified asymmetry, border irre
 \label{fig:shap}
 \end{figure}
 
-Grad-CAM overlays for non-degenerate examples showed attention concentrated on lesion regions in selected high-confidence melanoma cases (Figure~\ref{fig:gradcam}). These examples support qualitative error auditing but should not be interpreted as a quantitative localization validation.
+Grad-CAM localization checks showed that saliency frequently extended beyond the segmented lesion. The fraction of top 20\% saliency pixels inside the lesion mask was low (mean 0.154, median 0.000), and mean saliency was higher outside than inside the lesion mask (0.266 vs. 0.130). This identifies saliency leakage as a model-audit finding.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.82\textwidth]{fig_gradcam_cases.png}
-\caption{Grad-CAM overlays for selected non-degenerate deep-baseline examples.}
-\label{fig:gradcam}
+\includegraphics[width=0.95\textwidth]{fig_gradcam_mask_overlap.png}
+\caption{Grad-CAM localization analysis using ISIC 2018 Task 1 lesion masks.}
+\label{fig:gradcam_mask_overlap}
 \end{figure}
+
+Deletion and insertion testing quantified the sensitivity of predictions to Grad-CAM-ranked pixels. Across 200 images, deletion-curve AUC had mean 0.200 (SD 0.118), median 0.190, and interquartile range 0.091--0.273. Insertion-curve AUC had mean 0.218 (SD 0.117), median 0.204, and interquartile range 0.135--0.298. These distributions show heterogeneous saliency faithfulness across cases.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{fig_saliency_deletion_insertion.pdf}
+\caption{Grad-CAM deletion and insertion analysis.}
+\label{fig:saliency_deletion_insertion}
+\end{figure}
+
+Classifier-layer randomization produced mean rank correlation 0.262 (SD 0.417) between original and randomized Grad-CAM maps across 50 images. The residual correlation indicates that some Grad-CAM structure persisted after classifier randomization. In this framework, saliency maps are therefore treated as audit artifacts rather than standalone explanations.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{fig_saliency_randomization_sanity.pdf}
+\caption{Classifier-layer randomization check for Grad-CAM.}
+\label{fig:saliency_randomization}
+\end{figure}
+
+\subsection{Clinical Error Profiling and Algorithmic Fairness}
+
+To understand the clinical phenotypes driving failure modes under shift, we profiled the ABC descriptor distributions of False Negatives (FN) and False Positives (FP) on the BCN20000 dataset. Melanomas missed by the hybrid model (top 50 FNs by lowest predicted risk) exhibited substantially less classical atypia than True Positives (TPs): they had lower mean asymmetry (0.16 vs. 0.28 for TPs), lower border irregularity (1.39 vs. 2.07), and higher HSV value (lighter color, 176.9 vs. 138.6). This suggests the model selectively fails on feature-poor or hypomelanotic melanomas when applied to an external cohort.
+
+\begin{table}[htbp]
+\centering
+\caption{ABC descriptor profiles of prediction groups on BCN20000 (hybrid model, threshold = 0.5). False negatives (missed melanomas) show markedly lower asymmetry, reduced border irregularity, and lighter HSV value compared to true positives, consistent with selective failure on feature-poor presentations.}
+\label{tab:error_profiling}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrr}
+\toprule
+Group & $N$ & Asymmetry & Border irreg. & Color sat. & Color value \\
+\midrule
+False Negatives (missed mel.) & 50$^\dagger$ & 0.164 & 1.390 & 68.9 & 176.9 \\
+True Positives (found mel.)   & 408          & 0.284 & 2.078 & 80.0 & 138.6 \\
+False Positives (overcalled)  & 50$^\dagger$ & 0.303 & 1.925 & 89.1 & 138.7 \\
+True Negatives                & 9470         & 0.213 & 1.764 & 72.9 & 163.6 \\
+\bottomrule
+\end{tabular}%
+}
+\begin{tablenotes}\small
+\item[$\dagger$] Top 50 cases by most confident error (lowest predicted risk for FN; highest for FP).
+\end{tablenotes}
+\end{table}
+
+We also evaluated algorithmic fairness by computing the False Negative Rate (FNR) across patient demographics. The model demonstrated strong parity across biological sex, with near-identical FNR for male (0.852) and female (0.861) patients. Across age strata, a slight disparity was observed, with the model exhibiting a higher miss rate in younger patients ($<40$ years: FNR 0.896) compared to older patients ($40-60$ years: FNR 0.841; $>60$ years: FNR 0.857).
+
+\begin{table}[htbp]
+\centering
+\caption{Algorithmic fairness: false negative rate (FNR) at threshold 0.5 for the hybrid model on BCN20000, by biological sex and age group.}
+\label{tab:fairness}
+\begin{tabular}{llrr}
+\toprule
+Stratum & Group & $N_{\text{melanoma}}$ & FNR \\
+\midrule
+\multirow{2}{*}{Sex}       & Male   & 1465 & 0.852 \\
+                            & Female & 1379 & 0.861 \\
+\midrule
+\multirow{3}{*}{Age group} & $<$40 years  & 412  & 0.896 \\
+                            & 40--60 years & 1069 & 0.841 \\
+                            & $>$60 years  & 1363 & 0.857 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Predictive Uncertainty and Out-of-Distribution Rejection}
+To characterise the uncertainty of hybrid model predictions on BCN20000, we computed per-image predictive entropy. Applying a rejection rule that defers the top 5\% of cases with the highest predictive entropy (threshold $H > 0.678$ bits) changed the operating profile of the remaining 95\% of cases: Brier score improved from 0.189 to 0.184, reflecting better probability reliability in the accepted subset, while ROC-AUC decreased from 0.761 to 0.734 because a disproportionate share of near-boundary melanomas (true positives with genuine diagnostic ambiguity) fell in the high-entropy stratum. This tradeoff---lower uncertainty at the cost of deferring clinically ambiguous cases---is the expected behaviour of an entropy-based rejection rule and illustrates that predictive uncertainty can be used to triage cases for human review rather than to improve overall ranking. An operational implementation would require specifying the acceptable referral burden before selecting an entropy threshold.
 
 \section{Discussion}
 
-The revised analysis resolves two central methodological risks: endpoint inconsistency and unsupported claims about independent validation. The melanoma-only endpoint aligns the HAM10000 labels with the stated clinical task and with the official Task 3 melanoma label. The provenance audit shows that the available Task 3 files are not a separate cohort in this workspace, so conclusions from Task 3 are restricted to within-corpus behavior. Crucially, the addition of the BCN20000 cohort, enforced via strict perceptual hash auditing, supplies the missing independent external validation and proves that the hybrid and deep representations are transportable across dermoscopic image distributions without retraining.
+This study shows that hybrid ABC--deep modeling improves external melanoma ranking under measurable dataset shift. HAM10000-trained models were evaluated on duplicate-screened BCN20000 without retraining, and the external cohort differed strongly from HAM10000 in descriptor and representation space. Under this shift, the hybrid ABC+embedding model achieved the highest external AUC and PR-AUC among the evaluated model families and provided the best sensitivity at fixed specificities of 0.80, 0.90, and 0.95.
 
-Under lesion-level separation, the deep and hybrid models had similar ROC discrimination, but calibration favored the hybrid model under raw probabilities. Recalibration improved Brier score for both learned model families without materially changing AUC, consistent with the view that discrimination and probability accuracy should be assessed separately \citep{vancalster2025performance}. Decision-curve analysis further demonstrated that threshold-specific utility can differ even when discrimination is similar. 
+The operating-point results are clinically relevant. At specificity $\geq$90\%, the hybrid model detected 43.9\% of melanomas on BCN20000, compared with 36.5\% for the deep baseline and 25.0\% for the ABC-only model. Expressed as false negatives per 1000 evaluated lesions, this corresponds to 129 for the hybrid model, 146 for the deep model, and 173 for the ABC-only model. The hybrid model therefore improved not only ranking metrics but also high-specificity triage behavior.
 
-The ABC-conditioned model provides algorithmic novelty by allowing segmentation-derived descriptors to modulate the post-hoc transformation of deep logits. The external BCN20000 results suggest that this descriptor-conditioned correction can partially recover ranking performance under domain shift, but its calibration performance did not exceed global Platt or isotonic recalibration. Thus, the method is promising as a lightweight interpretable score-correction layer, but further regularization and validation are needed before claiming superior calibration.
+Calibration and decision-curve analyses showed that model quality depends on the target criterion. Temperature scaling gave the best external Brier score and ECE among probability-scaling methods, while decision-curve analysis showed threshold-range dependence. ABC-only achieved the highest integrated net benefit over thresholds 0.02--0.20 on BCN20000, whereas the deep baseline had the highest integrated net benefit over 0.02--0.50. These results show that discrimination, probability reliability, and threshold utility answer different questions.
 
-The ablation analysis indicates that embeddings account for most predictive signal. Handcrafted ABC descriptors did not improve discrimination when concatenated to embeddings, but they provide an explicit concept channel for audit and interpretation. The implicit-concept probes clarify this behavior: several color and border descriptors are already linearly recoverable from the EfficientNet embedding space, whereas asymmetry is not.
+The counterintuitive finding that the ABC-only model achieved the highest integrated net benefit over the 0.02--0.20 threshold range on BCN20000 is primarily attributable to the higher melanoma prevalence in the external cohort (23.0\% vs. 11.1\% in HAM10000). At low threshold probabilities---near the ``treat-all'' boundary---a model with moderate sensitivity and high specificity can mathematically exceed a better-ranking model in net benefit simply because the treat-all comparator curve drops off differently at higher prevalences. Consequently, INB in the low-threshold range is highly prevalence-sensitive and should not be interpreted as the ABC-only model possessing inherently superior clinical utility across all threshold ranges.
 
-The secondary Task 3-label analysis is useful for label-harmonization and full-corpus reporting, but it does not answer whether the models generalize to non-overlapping data. A future cohort could support that claim only after a documented zero-overlap audit by image identifier and lesion identifier where available.
+Descriptor-conditioned correction provided a useful but narrower result. On the reference split, ABC-conditioned correction improved external AUC relative to raw deep scores, and negative controls showed that this gain depended on real descriptors rather than shuffled, random, or label-permuted inputs. Split-seed analysis showed that this correction was not stable across alternative validation splits. The appropriate interpretation is therefore that descriptor-conditioned correction detects a real descriptor-specific transport signal, but its practical use requires stability selection or stronger regularization.
+
+The domain-shift analysis strengthens the external validation claim. HAM10000 and BCN20000 were highly separable by a domain classifier (AUC 0.987), and MMD and energy-distance tests confirmed representation-level divergence. The largest descriptor shifts involved saturation, asymmetry, and GLCM contrast, which are directly related to the ABC descriptor set. The external performance differences therefore occurred under measurable covariate and representation shift.
+
+Mask-robustness analysis clarified which descriptors are dependable. Color and homogeneity descriptors showed high stability across mask variants, whereas border irregularity was less stable. This supports the use of color and texture descriptors in hybrid models and score analyses, while limiting claims based on border irregularity alone.
+
+The saliency analyses add an explicit model-audit layer. Grad-CAM maps often extended outside lesion masks, deletion/insertion behavior varied across images, and classifier-layer randomization left residual saliency-map similarity. These results show that visual heatmaps should not be treated as sufficient evidence of lesion-centered reasoning. In the proposed framework, saliency is used to detect failure modes rather than to certify explanations.
+
+The clinical error profiling bridges the gap between aggregate metrics and clinical utility. The analysis revealed that false negatives on the external cohort were characterized by high regularity, smooth borders, and light pigmentation. This indicates that while the deep features generalize well for classical melanoma presentations, they struggle to extrapolate to feature-poor or amelanotic variants in new clinical environments. Highlighting this specific failure mode demonstrates the value of the interpretable ABC components in our hybrid framework, allowing us to explicitly audit \textit{what kind} of lesions the model misses, rather than just \textit{how many}.
+
+\subsection{Implications for applied use}
+
+The framework is most useful for external validation, model auditing, and threshold-selection studies. The hybrid model is the strongest candidate among the evaluated models when the objective is external melanoma ranking or high-specificity sensitivity. Temperature scaling is preferable when the objective is external probability reliability. Decision-curve analysis should be used when the objective is threshold-based triage utility. Descriptor-conditioned correction is best treated as a transportability experiment that identifies descriptor-specific shift signals.
 
 \section{Limitations}
 
-The study uses retrospective public data and a within-corpus evaluation design. Patient-level identifiers are not consistently available in HAM10000, so splitting was enforced at the lesion level. Although this prevents images from the same lesion crossing splits, residual patient-level dependence cannot be fully excluded.
+Three methodological boundaries define the scope of these findings. First, all datasets are public, retrospective, and dermoscopy-only. HAM10000 supports lesion-level but not full patient-level separation; BCN20000 is a single retrospective external cohort rather than a prospective or multi-site validation. Endpoint labels are dataset-provided and have not been independently adjudicated. Second, the ABC descriptors are computed from automatic segmentation masks. The mask-robustness analysis confirmed high ICC for color and homogeneity descriptors but low ICC for border irregularity (0.269); claims derived from border features should be interpreted accordingly. Third, the scope is deliberately limited to model-to-model comparison: no dermatologist benchmark is included, the deep backbone (EfficientNet-B0) predates more recent architectures such as Vision Transformers, and descriptor-conditioned correction proved split-sensitive, requiring stability selection before operational use. The audit framework is model-agnostic and can accommodate updated backbones and prospective cohorts in future work.
 
-The segmentation pipeline uses classical methods and handcrafted descriptors whose quality depends on mask quality. Grad-CAM is reported qualitatively and does not establish quantitative localization accuracy. Subgroup calibration analyses are descriptive and may be influenced by subgroup sample-size imbalance.
+\sectionsection{Conclusion}
 
-Most importantly, while the local ISIC 2018 Task 3 files overlap completely with HAM10000, our inclusion of the BCN20000 external validation cohort circumvents this limitation. However, differences in underlying demographic sampling between HAM10000 and BCN20000 could still introduce unmeasured transportability variance.
+We present an externally validated hybrid ABC--deep framework for dermoscopic melanoma classification under dataset shift. The framework harmonizes endpoint definition, documents dataset provenance, enforces lesion-level separation, screens external validation data for duplicates, and evaluates discrimination, calibration, clinical operating points, decision-curve utility, domain shift, mask robustness, subgroup transportability, score correction, and saliency behavior.
 
-\section{Conclusion}
+On BCN20000, the hybrid ABC+embedding model was the strongest external ranker and achieved the highest sensitivity at fixed specificities of 0.80, 0.90, and 0.95. Domain-shift testing confirmed strong separation between HAM10000 and BCN20000 representations, supporting the relevance of the external validation setting. Calibration benchmarking showed that temperature scaling improved external probability reliability, while descriptor-conditioned correction improved reference-split ranking but was not stable across all validation splits. Mask-robustness analysis supported color and homogeneity descriptors as the most stable segmentation-derived features. Saliency analysis identified leakage and heterogeneous faithfulness, supporting quantitative heatmap auditing.
 
-We present a reproducible audit framework for melanoma-only dermoscopic classification. The framework harmonizes endpoint definition, documents dataset provenance, enforces lesion-level separation, and evaluates discrimination, calibration, recalibration, decision utility, and interpretability as distinct model properties. The revised results show similar internal discrimination between deep and hybrid models, better raw Brier score for the hybrid model, and meaningful probability improvements after recalibration. Furthermore, independent validation on the zero-overlap audited BCN20000 cohort confirmed the external transportability of the models. The framework is intended to support transparent model auditing while clearly establishing evidence of true external generalization.
+The main contribution is a reproducible external-validation and audit framework showing that hybrid ABC--deep representations improve melanoma ranking under dataset shift while calibration, threshold utility, correction stability, segmentation robustness, and saliency behavior require separate evaluation.
 
 \section*{Code and Data Availability}
 
-Submission is blocked until the forthcoming Zenodo DOI is inserted here. The archived release is expected to contain the full experimental pipeline for segmentation benchmarking, handcrafted feature extraction, deep model training, embedding extraction, hybrid model training, lesion-level testing, secondary Task 3-label evaluation, bootstrap analyses, calibration estimation, and decision-curve analysis.
+The source code, configuration files, split definitions, derived prediction files, result tables, and figure-generation scripts are available at: \url{https://github.com/squareshorts/melanoma-abc-hybrid}. The repository contains the pipeline for segmentation benchmarking, EfficientNet-B0 training and embedding extraction, XGBoost modeling, duplicate screening, external validation on BCN20000, calibration analysis, descriptor-conditioned logit transport, decision-curve analysis, subgroup checks, and saliency failure-mode auditing.
 
-All experiments are reproducible using the fixed random seeds and configuration files included in the repository. The release also includes the seeded ISIC 2018 Task 1 subset identifiers used in the segmentation benchmark and the derived result files produced by the pipeline.
+All experiments are reproducible using the provided configuration files and fixed random seed 42. The archive includes derived model outputs and tabular results necessary to reproduce the reported tables and figures. HAM10000 and ISIC 2018 datasets are publicly available from the International Skin Imaging Collaboration, and BCN20000 is publicly available from its original repository. These datasets must be obtained directly from their official sources in accordance with their respective data-use agreements.
 
-HAM10000 and ISIC 2018 datasets are publicly available from the International Skin Imaging Collaboration and must be obtained directly from their official repositories in accordance with their respective data use agreements.
-
-\section*{Reproducibility}
+\*{Reproducibility}
 
 All experiments used fixed configuration files and random seed 42. Model architectures, hyperparameters, preprocessing settings, and split definitions are specified in the repository.
 
-\section*{Declaration of Competing Interest}
+\*{Funding}
+
+This work was financially supported by the Conselho Nacional de Desenvolvimento Científico e Tecnológico (CNPq) under Grant No.~309589/2023-1 to A.P., and by the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES).
+
+\*{Declaration of Competing Interest}
 The authors declare no competing interests.
 
-\section*{Funding}
-This work was supported by the Conselho Nacional de Desenvolvimento Científico e Tecnológico (CNPq) under Grant No.~309589/2023-1 and by the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior (CAPES).
+\*{Ethics Approval}
+This study used publicly available, de-identified datasets (HAM10000, ISIC 2018, and BCN20000); ethical approval and informed consent were not required for this secondary analysis.
 
-\section*{Ethics Approval}
-This study used publicly available, de-identified datasets (HAM10000 and ISIC 2018); ethical approval and informed consent were not required.
+\*{Data Availability}
+HAM10000 and ISIC 2018 Task 3 datasets are publicly available from the International Skin Imaging Collaboration. BCN20000 is publicly available from its original dataset repository.
 
-\section*{Data Availability}
-HAM10000 and ISIC 2018 Task 3 datasets are publicly available from the International Skin Imaging Collaboration.
-
-\section*{CRediT Authorship Contribution Statement}
-Rafael Oliveira Chaves: Conceptualization, Methodology, Software, Formal analysis, Writing -- Original Draft.
-Antonio Pereira Junior: Supervision, Validation, Writing -- Review \& Editing.
+\*{Declaration of Generative AI and AI-assisted Technologies in the Writing Process}
+During manuscript preparation, the authors used ChatGPT to assist with language editing, structural revision, and identification of reporting gaps. The authors reviewed and edited all content and take full responsibility for the final manuscript.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{references}

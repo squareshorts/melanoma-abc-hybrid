@@ -1,0 +1,2 @@
+mask_variant,model,AUC,Brier
+levelset,ABC-only,0.805761522375948,0.08670235264515494

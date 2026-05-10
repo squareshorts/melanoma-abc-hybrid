@@ -14,3 +14,5 @@ xgboost
 shap
 pillow
 joblib
+betacal
+imagehash

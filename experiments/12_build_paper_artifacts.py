@@ -109,8 +109,8 @@ if __name__ == "__main__":
     ]
     internal_series = [s for s in internal_series if s is not None]
     if internal_series:
-        plot_roc_multi(internal_series, "results/figures/fig_curves_internal_roc.png", "HAM10000 test ROC")
-        plot_pr_multi(internal_series, "results/figures/fig_curves_internal_pr.png", "HAM10000 test precision-recall")
+        plot_roc_multi(internal_series, "results/figures/fig_curves_internal_roc.png", None)
+        plot_pr_multi(internal_series, "results/figures/fig_curves_internal_pr.png", None)
         plot_calibration_multi(internal_series, "results/figures/fig_curves_internal_calibration.png", "HAM10000 test calibration")
 
     secondary_series = [
