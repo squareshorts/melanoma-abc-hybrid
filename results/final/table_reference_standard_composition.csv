@@ -1,0 +1,10 @@
+dataset,class,confirmation_type,N_images,fraction_within_class
+HAM10000 full,non-melanoma,histo,4227,0.4748371152549989
+HAM10000 full,non-melanoma,follow_up,3704,0.41608627274769716
+HAM10000 full,non-melanoma,consensus,902,0.10132554482138845
+HAM10000 full,non-melanoma,confocal,69,0.007751067175915525
+HAM10000 full,melanoma,histo,1113,1.0
+BCN20000 evaluated,non-melanoma,histopathology,6691,0.700188363331938
+BCN20000 evaluated,non-melanoma,Missing,2097,0.21944328170782754
+BCN20000 evaluated,non-melanoma,confocal microscopy with consensus dermoscopy,768,0.08036835496023441
+BCN20000 evaluated,melanoma,histopathology,2857,1.0
