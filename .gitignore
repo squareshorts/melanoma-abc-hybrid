@@ -1,34 +1,23 @@
-# Virtual environment
+# Local environment and caches
 .venv/
 __pycache__/
 *.pyc
+.DS_Store
+Thumbs.db
 
-# Raw and derived data
-# Ignore raw datasets and giant segmentation masks
+# Raw or heavy local data
 data/raw/
 data/derived/segmentations/
 data_local_backup/
 
-# Allow vital aggregated features and embeddings to be tracked
-!data/derived/*.csv
-!data/derived/*.npy
-
-# Results
-# Ignore raw run outputs by default, but track the models and predictions!
-results/runs/*
-!results/runs/**/*.joblib
-!results/runs/**/*.csv
+# Locally generated model checkpoints and prediction runs.
+# These are regenerated from the pipeline and are intentionally excluded
+# from the archival GitHub/Zenodo release.
+results/runs/
 results/audit/
-
-# Figures and Tables should BE TRACKED for manuscript availability!
-# results/figures/ (uncommented to track)
-# results/tables/ (uncommented to track)
-
-# Checkpoints and large artifacts
 *.pt
 *.pth
 *.pkl
 
-# OS
-.DS_Store
-Thumbs.db
+# Current compact derived outputs under results/final/ and manuscript figures
+# under results/figures/ are tracked.
