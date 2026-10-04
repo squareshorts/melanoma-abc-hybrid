@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "Lesion-Aware External Evaluation of Dermoscopic Melanoma Classifiers under Dataset Shift: reproducibility code and outputs"
-message: "If you use this software or its derived outputs, please cite the associated Zenodo release and manuscript."
+message: "If you use this software or its derived outputs, please cite the v2.0.0 Zenodo release and associated manuscript."
 type: software
 authors:
   - family-names: Chaves
@@ -9,9 +9,14 @@ authors:
   - family-names: Pereira Junior
     given-names: Antonio
     affiliation: Federal University of Pará
+version: "2.0.0"
+date-released: 2026-10-04
+doi: 10.5281/zenodo.23130026
+repository-code: "https://github.com/squareshorts/melanoma-abc-hybrid"
+repository-artifact: "https://github.com/squareshorts/melanoma-abc-hybrid/releases/tag/v2.0.0"
+url: "https://doi.org/10.5281/zenodo.23130026"
 year: 2026
 license: MIT
-repository-code: "https://github.com/squareshorts/melanoma-abc-hybrid"
 keywords:
   - melanoma
   - dermoscopy
