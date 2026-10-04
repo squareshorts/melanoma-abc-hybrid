@@ -1,0 +1,7 @@
+analysis_unit,model_a,model_b,delta_auc_a_minus_b,ci_low,ci_high
+image predictions; lesion-clustered inference,Hybrid,Deep,0.0481892161791011,0.03612875982984299,0.0607271377867708
+lesion; mean image probability,Hybrid,Deep,0.04453155483077054,0.029649006698138924,0.06039065908523367
+image predictions; lesion-clustered inference,Hybrid,Handcrafted,0.06921325032346226,0.04940618900211624,0.08954865292675063
+lesion; mean image probability,Hybrid,Handcrafted,0.06166835912879054,0.03731097183817742,0.08424749492918271
+image predictions; lesion-clustered inference,Deep,Handcrafted,0.02102403414436116,-0.00449740005602077,0.04666315331744921
+lesion; mean image probability,Deep,Handcrafted,0.017136804298020003,-0.01163072612176432,0.04579590902384545
