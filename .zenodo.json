@@ -1,0 +1,20 @@
+{
+  "title": "Lesion-Aware External Evaluation of Dermoscopic Melanoma Classifiers under Dataset Shift: reproducibility code and outputs",
+  "upload_type": "software",
+  "description": "Reproducibility code and derived outputs for lesion-aware external evaluation of dermoscopic melanoma classifiers. The release includes corrected external inference with lesion-clustered uncertainty, source-derived operating thresholds transported from HAM10000 to BCN20000, lesion-mean sensitivity analyses, segmentation robustness checks, reference-standard sensitivity analyses, and saliency diagnostics. Earlier BCN-derived fixed-specificity and decision-curve analyses are superseded.",
+  "creators": [
+    {"name": "Chaves, Rafael Oliveira", "affiliation": "Federal University of Pará"},
+    {"name": "Pereira Junior, Antonio", "affiliation": "Federal University of Pará"}
+  ],
+  "keywords": [
+    "melanoma",
+    "dermoscopy",
+    "external validation",
+    "dataset shift",
+    "lesion-clustered bootstrap",
+    "calibration",
+    "Grad-CAM"
+  ],
+  "access_right": "open",
+  "license": "mit-license"
+}
