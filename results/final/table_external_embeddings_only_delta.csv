@@ -1,0 +1,2 @@
+comparison,delta_AUC,ci_low,ci_high,inference,n_boot
+Hybrid minus Embeddings-only,-0.0005016026230361126,-0.002803992261581012,0.001641555380991238,paired lesion-clustered bootstrap,500
