@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-title: "melanoma-abc-hybrid: Reproducible Evaluation Framework for Dermoscopic Classification"
-message: "If you use this software, please cite the associated manuscript."
+title: "Lesion-Aware External Evaluation of Dermoscopic Melanoma Classifiers under Dataset Shift: reproducibility code and outputs"
+message: "If you use this software or its derived outputs, please cite the associated Zenodo release and manuscript."
 type: software
 authors:
   - family-names: Chaves
@@ -11,13 +11,12 @@ authors:
     affiliation: Federal University of Pará
 year: 2026
 license: MIT
-repository-code: "https://github.com/YOUR_GITHUB_USERNAME/melanoma-abc-hybrid"
+repository-code: "https://github.com/squareshorts/melanoma-abc-hybrid"
 keywords:
   - melanoma
   - dermoscopy
-  - calibration
-  - decision-curve analysis
-  - explainable AI
-  - SHAP
-  - Grad-CAM
+  - external validation
   - dataset shift
+  - lesion-clustered bootstrap
+  - calibration
+  - Grad-CAM
