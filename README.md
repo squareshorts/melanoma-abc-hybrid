@@ -64,7 +64,13 @@ Releases `v1.0.0` and `1.0.1` archive earlier development states. Their decision
 
 ## Citation and archive
 
-The repository is archived through Zenodo. A version-specific DOI is minted for each archival release. Cite the DOI associated with the latest release used in your work.
+The manuscript-aligned archival release is **v2.0.0 — Lesion-aware external evaluation**.
+
+- Zenodo DOI: **10.5281/zenodo.23130026**
+- GitHub release: https://github.com/squareshorts/melanoma-abc-hybrid/releases/tag/v2.0.0
+- Zenodo record: https://doi.org/10.5281/zenodo.23130026
+
+Please cite the version-specific Zenodo DOI when referring to the code and derived outputs used for the revised manuscript.
 
 ## License
 
