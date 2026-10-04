@@ -23,11 +23,12 @@ def load_config(path="config.yaml"):
         "isic_task1_masks": raw_path("isic_task1", "masks"),
         "isic_task3_images": raw_path("isic_task3", "images"),
         "isic_task3_labels": raw_path("isic_task3", "labels"),
+        "bcn20000_images": raw_path("bcn20000", "images"),
+        "bcn20000_metadata": raw_path("bcn20000", "metadata"),
     }
     for key, value in defaults.items():
         if value is not None:
             paths.setdefault(key, value)
-
     return cfg
 
 def ensure_dir(p: str):
