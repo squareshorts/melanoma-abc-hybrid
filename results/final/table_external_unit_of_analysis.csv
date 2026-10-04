@@ -1,0 +1,2 @@
+external_images,external_unique_lesions,positive_images,positive_lesions,image_prevalence,lesion_prevalence,median_images_per_lesion,mean_images_per_lesion,max_images_per_lesion,lesions_with_multiple_images,lesions_with_label_conflict
+12413,3576,2857,524,0.23016192701200355,0.1465324384787472,3.0,3.4711968680089487,31,3088,0
