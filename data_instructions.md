@@ -1,22 +1,33 @@
-# Data Instructions
+# Data instructions
 
-This repository does not redistribute datasets.
+Raw image datasets are not redistributed by this repository. Download them from their original sources and set `data_root` in `config.yaml` to the parent directory containing the datasets.
 
-To reproduce experiments:
+The current manuscript uses HAM10000 for model development, ISIC 2018 Task 1 for segmentation and saliency-mask benchmarking, and BCN20000 for external evaluation and lesion-level clustering metadata. External melanoma labels are matched by image identifier from the ISIC 2019 ground-truth table used by the original BCN evaluation scripts.
 
-1. Download HAM10000 from:
-   https://doi.org/10.1038/sdata.2018.161
+Example local layout:
 
-2. Download ISIC 2018 Task 1 and Task 3 from:
-   https://challenge.isic-archive.com
+```text
+C:/work/datasets/
+  HAM10000/
+    images/
+    metadata.csv
+  ISIC2018/
+    Task1/
+      images/
+      masks/
+    Task3/
+      images/
+      labels.csv
+  BCN20000/
+    images/
+      metadata.csv
+      ISIC_*.jpg
+```
 
-3. Place datasets under:
+The corrected external audit expects locally generated prediction files under `results/runs/` and writes current tables to `results/final/`:
 
-data/raw/HAM10000/
-data/raw/ISIC2018/
+```powershell
+.\.venv\Scripts\python.exe experiments\23_final_external_audit.py
+```
 
-4. Run:
-
-python -m experiments.01_make_split
-python -m experiments.02_segment_isic_task1
-...
+Operating thresholds are selected from HAM10000 validation predictions and applied unchanged to BCN20000. External uncertainty is resampled by BCN20000 `lesion_id`.
