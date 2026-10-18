@@ -1,0 +1,176 @@
+{
+  "audit_type": "frozen_source_metadata_and_identifier_checks",
+  "verified_source_checksums": [
+    {
+      "file": "inputs/upstream_bcn_master_split_file.csv",
+      "bytes": 5351853,
+      "git_blob_sha": "757195714b160ac647122b25afc332f7cc090c45",
+      "sha256": "3a681c59f572f1f12078bdc0cb9a2ad7ef282d051f05e1a856eacee55da605b1"
+    },
+    {
+      "file": "inputs/upstream_ham_metadata.csv",
+      "bytes": 690218,
+      "git_blob_sha": "c4ed285843ed4f5108a32a2739e5e0a94069c1a1",
+      "sha256": "de17ec44cb25ea9c3f6378ba18d69224c740afd62e86ec2edc6a894d6aa663d3"
+    },
+    {
+      "file": "inputs/upstream_ham_confirmed_duplicate_pairs.csv",
+      "bytes": 798,
+      "git_blob_sha": "49dcfe1d5873a65a3dc302f5dc189f59c0650d40",
+      "sha256": "fafe916c6a97c4d6c6de3c7c93eae1f7eb601680692c25ea82c8ef595fca73c7"
+    },
+    {
+      "file": "inputs/upstream_ham_near_duplicates_different_times.csv",
+      "bytes": 112,
+      "git_blob_sha": "82b7b327d6d49b81a329f41f49058ee98a082e2e",
+      "sha256": "6c4aff9e4b138c25765045783de8a47273051448da13670bad9087f87530492a"
+    },
+    {
+      "file": "inputs/project_ham_lesion_split.json",
+      "bytes": 142192,
+      "git_blob_sha": "d69abed8a80bbfec09d152f72afe0caacc9e6e79",
+      "sha256": "0b15227120ec6f570fb98f7a2d6a60c78f9280fca3e18d88f61f4c1177c6a368"
+    },
+    {
+      "file": "inputs/project_bcn20000_valid_ids.csv",
+      "bytes": 246307,
+      "git_blob_sha": "6a5538435ea7e6d811898ab82ab4802069ab456f",
+      "sha256": "8cbfd95dce1b82925ad69ddce9414f5c8b2af5fc10b15d5c2a9f29d71881ff54"
+    },
+    {
+      "file": "inputs/project_ISIC_2019_Training_Metadata.csv",
+      "bytes": 1189019,
+      "git_blob_sha": "f0bd025452e8cf6000b53069ab0e47deef330729",
+      "sha256": "39d5e27038cc9e15f9982875206f471e62e83a36873e237589cee5208f13f249"
+    },
+    {
+      "file": "inputs/archive_BCN20000_metadata.csv",
+      "bytes": 4087250,
+      "git_blob_sha": "496914458f1c548842846ea437ae9d89364f1eca",
+      "sha256": "aad0ba08a3c1ce7fa0c24eab10f435bb7df1f57108409a449006da299574d1da"
+    },
+    {
+      "file": "inputs/archive_HAM10000_metadata.csv",
+      "bytes": 563277,
+      "git_blob_sha": "0b24187ee01ffe0d3e4eaafb585e8be7a61848eb",
+      "sha256": "06aee5e603d313ba69de38263053c792a1dff030eb9c44a96ceb477ceefb99a5"
+    },
+    {
+      "file": "inputs/archive_ham_lesion_split.json",
+      "bytes": 149677,
+      "git_blob_sha": "94bbdfb9a6c892e5e69ef6db321ca51a58c6b01b",
+      "sha256": "f9a0beecf80a526b983d14dc38ef7efd05dbe3bdbd3de4e2e2aa5e5518ded3ef"
+    },
+    {
+      "file": "inputs/archive_cohort_image_disposition.csv",
+      "bytes": 3658525,
+      "git_blob_sha": "189ee34accf322e8208489ab589f6cda5bba8b39",
+      "sha256": "983e307348dea4200be5318421f1564f24a0121698583b63b1d46af0398f6204"
+    }
+  ],
+  "HAM10000": {
+    "recovered_split_structurally_equals_public_repository_split": true,
+    "recovered_ham_metadata_equals_published_source_on_all_original_columns": true,
+    "source_split_counts": {
+      "train": {
+        "images": 7000,
+        "lesions": 5229,
+        "melanoma_images": 774
+      },
+      "val": {
+        "images": 1505,
+        "lesions": 1120,
+        "melanoma_images": 172
+      },
+      "test": {
+        "images": 1510,
+        "lesions": 1121,
+        "melanoma_images": 167
+      }
+    },
+    "published_confirmed_pairs": 18,
+    "pair_partition_counts": {
+      "train-train": 7,
+      "test-train": 5,
+      "train-val": 5,
+      "val-val": 1
+    },
+    "all_pair_images_nonmelanoma": true,
+    "whole_heldout_group_candidate_exclusions": {
+      "val": {
+        "images": 6,
+        "lesions": 5,
+        "melanoma_images": 0
+      },
+      "test": {
+        "images": 6,
+        "lesions": 5,
+        "melanoma_images": 0
+      }
+    },
+    "scope": "Known published identity corrections only; not an exhaustive duplicate screen.",
+    "interpretation": "Exclusions support a separate fixed-model sensitivity analysis. They do not undo the original checkpoint-selection history or establish clean training.",
+    "other_same_partition_pair": "One val-val pair can be treated as one known component in an explicitly labeled grouping sensitivity analysis. Baseline IDs are not rewritten.",
+    "near_duplicates_different_times_file": "Preserved as a separate source, not merged with the confirmed-same-lesion pair list."
+  },
+  "BCN20000": {
+    "official_master_rows": 62065,
+    "fold_numbers": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "official_original_split_values": [
+      "train"
+    ],
+    "official_unique_images": 12413,
+    "official_unique_lesions": 3576,
+    "official_melanoma_images": 2857,
+    "official_melanoma_lesions": 524,
+    "official_image_diagnosis_counts": {
+      "MEL": 2857,
+      "SCC": 431,
+      "NV": 4206,
+      "BCC": 2809,
+      "BKL": 1138,
+      "AK": 737,
+      "DF": 124,
+      "VASC": 111
+    },
+    "official_lesion_diagnosis_counts": {
+      "AK": 236,
+      "NV": 1281,
+      "SCC": 122,
+      "BCC": 983,
+      "MEL": 524,
+      "BKL": 353,
+      "VASC": 37,
+      "DF": 40
+    },
+    "project_screened_unique_images": 18946,
+    "project_isic2019_metadata_intersection_images": 12413,
+    "screened_images_absent_from_isic2019_metadata": 6533,
+    "matching_lesion_image_multiplicities": 3576,
+    "same_lesion_id_sets": true,
+    "same_multiset_of_lesion_age_sex_site_rows": true,
+    "sorted_filename_rank_matching_metadata_rows": 12413,
+    "actual_evaluated_image_ids_equal_isic2019_training_metadata_intersection": true,
+    "actual_evaluated_labels_agree_with_official_diagnoses_via_original_lesion_id": 12413,
+    "original_BCN_to_archived_IL_lesion_ids_bijective_in_evaluated_set": true,
+    "actual_evaluated_complete_prediction_rows_in_disposition": 12413,
+    "actual_archive_full_image_count": 18946,
+    "actual_archive_full_lesion_count": 5440,
+    "actual_archive_included_lesions": 3576,
+    "actual_archive_excluded_lesions": 1864,
+    "actual_archive_shared_included_excluded_lesions": 0,
+    "interpretation": "The public labeled BCN training partition is corroborated at lesion and per-image metadata-multiset level. The original training designation does not prevent its use as external evaluation for models fitted only on HAM.",
+    "unverified": [
+      "An authoritative BCN filename-to-ISIC image-ID crosswalk is not available in these inputs; sorted-rank matching is not asserted as a pixel-identity check or an official alias mapping.",
+      "Prediction scores were not read or validated. Completeness is checked from the recovered disposition table only.",
+      "The paper's whole-release 5,583 lesions versus 5,440 IL identifiers in the recovered full metadata remains an upstream version/identifier-count discrepancy. There is no corresponding discrepancy in the evaluated 3,576 lesion grouping; original BCN and archived IL groups map bijectively there.",
+      "The additional 6,533 screened records are not the official public training partition; hidden-test diagnoses were not recovered or inferred."
+    ]
+  }
+}

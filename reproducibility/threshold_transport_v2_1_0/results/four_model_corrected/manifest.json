@@ -1,0 +1,189 @@
+{
+  "status": "complete",
+  "engine": "/workspace/scratch/c2b29ff966df/revision_work/analysis/frozen_score_transport.py",
+  "engine_sha256": "34d7f84c1f9fbc91e590f47c1feb57dd78a62bc60d4c50ed387ed61fcb852b87",
+  "models": [
+    "Handcrafted",
+    "Deep",
+    "Hybrid",
+    "EmbeddingsOnly_Reconstructed"
+  ],
+  "score_definition": "Melanoma probability; larger scores predict melanoma",
+  "positive_predicate": "score >= threshold",
+  "primary_unit": "lesion_mean",
+  "secondary_unit": "image_cluster",
+  "aggregation": "Arithmetic mean of all available image probabilities within a lesion",
+  "threshold_source": "ham_validation only",
+  "threshold_candidates": "Distinct source scores plus +inf",
+  "specificity_rule": "Maximize sensitivity subject to target specificity, then maximize specificity, then cutoff",
+  "sensitivity_rule": "Maximize specificity subject to target sensitivity, then maximize sensitivity, then cutoff",
+  "targets": [
+    {
+      "type": "specificity",
+      "value": 0.8
+    },
+    {
+      "type": "specificity",
+      "value": 0.9
+    },
+    {
+      "type": "specificity",
+      "value": 0.95
+    },
+    {
+      "type": "sensitivity",
+      "value": 0.9
+    },
+    {
+      "type": "sensitivity",
+      "value": 0.95
+    }
+  ],
+  "bootstrap_requested": 2000,
+  "bootstrap_valid": 2000,
+  "bootstrap_attempts": 2000,
+  "bootstrap_rejected_joint_draws": 0,
+  "degenerate_draws_by_cohort": {
+    "ham_validation": 0,
+    "ham_test": 0,
+    "bcn_external": 0
+  },
+  "bootstrap_seed": 20261018,
+  "bootstrap_method": "Ordinary nonparametric lesion resampling with replacement",
+  "bootstrap_pairing": "Same lesion multiplicities across models and analysis units; independent cohorts; matched target draws across uncertainty modes",
+  "bootstrap_degenerate_handling": "Reject and redraw whole paired replicate if any cohort contains only one outcome class",
+  "confidence_interval": "Pointwise 95% percentile, NumPy linear quantiles; no multiplicity adjustment",
+  "scope": "Conditional on supplied fitted scores; no training, checkpoint-selection or patient-cluster uncertainty",
+  "interpretation": {
+    "fixed_cutoff": "Sampling uncertainty for this source-selected decision rule",
+    "source_reestimated": "Additional uncertainty in re-estimating cutoffs from another source sample",
+    "ham_validation": "Apparent source estimates; validation selected checkpoint and thresholds",
+    "ap_and_brier": "Depend on case mix/prevalence; cross-cohort differences are descriptive",
+    "null_brier": "Descriptive constant equal to observed cohort prevalence, not an independently trained predictor",
+    "positive_fraction": "Fraction in these retrospective cohorts, not a population referral estimate"
+  },
+  "provenance_scope": "Input identity and internal joins verified; upstream official-dataset mapping must be documented separately",
+  "checks": {
+    "complete_common_model_scores": true,
+    "unique_image_ids": true,
+    "consistent_binary_lesion_labels": true,
+    "validation_test_lesion_disjoint": true,
+    "cross_cohort_image_ids_disjoint": true,
+    "no_imputation_or_row_exclusion": true,
+    "input_hashes_unchanged": true,
+    "train_partition_checked": false,
+    "official_external_partition_verified_by_engine": false
+  },
+  "inputs": [
+    {
+      "cohort": "ham_validation",
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/inputs/four_model_known_identity_corrected/ham_validation.csv",
+      "sha256": "d363bb3c68b32ef04f12ab0f6dcc2b128b10be5b76787ea754de5a71af6ce0e9",
+      "summary": {
+        "cohort": "ham_validation",
+        "images": 1499,
+        "lesions": 1114,
+        "melanoma_images": 172,
+        "melanoma_lesions": 92,
+        "image_prevalence": 0.11474316210807205,
+        "lesion_prevalence": 0.08258527827648116,
+        "image_prevalence_only_brier": 0.10157716885751275,
+        "lesion_prevalence_only_brier": 0.07576495008847733,
+        "median_images_per_lesion": 1.0,
+        "maximum_images_per_lesion": 6,
+        "multiple_image_lesions": 293,
+        "mean_images_per_melanoma_lesion": 1.8695652173913044,
+        "mean_images_per_nonmelanoma_lesion": 1.2984344422700587
+      }
+    },
+    {
+      "cohort": "ham_test",
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/inputs/four_model_known_identity_corrected/ham_test.csv",
+      "sha256": "6c055e1e7287c5e406563a33041f9061141951f5c89a8baac15a7f12bde6954f",
+      "summary": {
+        "cohort": "ham_test",
+        "images": 1504,
+        "lesions": 1116,
+        "melanoma_images": 167,
+        "melanoma_lesions": 92,
+        "image_prevalence": 0.1110372340425532,
+        "lesion_prevalence": 0.08243727598566308,
+        "image_prevalence_only_brier": 0.09870796669873247,
+        "lesion_prevalence_only_brier": 0.0756413715137267,
+        "median_images_per_lesion": 1.0,
+        "maximum_images_per_lesion": 4,
+        "multiple_image_lesions": 305,
+        "mean_images_per_melanoma_lesion": 1.815217391304348,
+        "mean_images_per_nonmelanoma_lesion": 1.3056640625
+      }
+    },
+    {
+      "cohort": "bcn_external",
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/inputs/four_model_known_identity_corrected/bcn_external.csv",
+      "sha256": "2139df9af7b9f12e7e03adf1fe78dd8e8185a0c6869b4c745c02c0134b2c9bc1",
+      "summary": {
+        "cohort": "bcn_external",
+        "images": 12413,
+        "lesions": 3576,
+        "melanoma_images": 2857,
+        "melanoma_lesions": 524,
+        "image_prevalence": 0.23016192701200355,
+        "lesion_prevalence": 0.1465324384787472,
+        "image_prevalence_only_brier": 0.1771874143661247,
+        "lesion_prevalence_only_brier": 0.12506068295221937,
+        "median_images_per_lesion": 3.0,
+        "maximum_images_per_lesion": 31,
+        "multiple_image_lesions": 3088,
+        "mean_images_per_melanoma_lesion": 5.452290076335878,
+        "mean_images_per_nonmelanoma_lesion": 3.1310615989515074
+      }
+    }
+  ],
+  "outputs": {
+    "cohort_summary.csv": {
+      "rows": 3,
+      "sha256": "d7896dda45dfb56b2d31740e276bc5243a5153035feaa0ece57065ae6250041e"
+    },
+    "source_roc.csv": {
+      "rows": 10436,
+      "sha256": "b47cdc7fb5febe99679858c9c72d0a02135f7c8f98852b35a20f46e76f6879cd"
+    },
+    "thresholds.csv": {
+      "rows": 40,
+      "sha256": "ebed6bfb0d24e8658bc68c30c6bc952b4960f2630683d847c2f1351434777945"
+    },
+    "discrimination.csv": {
+      "rows": 72,
+      "sha256": "5472e3750d45857d6f7306b56a1318280c73054c861c092465e7516d8eb67919"
+    },
+    "operating_performance.csv": {
+      "rows": 200,
+      "sha256": "43a704d3c00c252bbcc9be58376b10658ce4686ad2a2a416864465fb304501fe"
+    },
+    "paired_operating_deltas.csv": {
+      "rows": 720,
+      "sha256": "19e1e3c8a7e766782b32f055eb8345054be71e6ff4d0c5ed9078c05b6eb7d717"
+    },
+    "paired_discrimination_deltas.csv": {
+      "rows": 108,
+      "sha256": "dd3b8f105e69550bce3ec9846b2469a24abb9a0cfb140c2f8fabaf936e8e87ee"
+    },
+    "transfer_deltas.csv": {
+      "rows": 240,
+      "sha256": "2b84966a2fd6c0ca2caf1a25754bc9c0cc7af1f5d0de8699d1c04ec8801e28eb"
+    },
+    "transfer_discrimination_deltas.csv": {
+      "rows": 24,
+      "sha256": "cb62f9d417c8145988a4c363174c5c9e44342d8d5d160a471f257da3ffd27cf0"
+    },
+    "bootstrap_diagnostics.csv": {
+      "rows": 40,
+      "sha256": "2cf02cc7104b3868cee8ed93b07625f6528267195939415a5f3245e3710f416c"
+    }
+  },
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3"
+  }
+}

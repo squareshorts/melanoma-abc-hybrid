@@ -1,0 +1,11 @@
+{
+  "model_name": "EmbeddingsOnly_Reconstructed",
+  "reconstructed_external_AUC": 0.7613159017096941,
+  "archived_external_AUC": 0.7613159017096941,
+  "difference_from_archived_AUC": 0.0,
+  "matches_archived_AUC_at_absolute_tolerance_1e_minus_12": true,
+  "hybrid_external_AUC_same_rows": 0.760814299086658,
+  "hybrid_minus_reconstructed_external_AUC": -0.0005016026230361126,
+  "qualification": "An AUC match is an aggregate reproduction result, not proof of row-wise identity to unavailable original embeddings-only scores. Model remains explicitly labeled reconstructed.",
+  "after_evaluation_action": "No alternative parameterization or refit is selected based on these external results."
+}

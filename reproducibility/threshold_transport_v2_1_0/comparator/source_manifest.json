@@ -1,0 +1,22 @@
+[
+  {
+    "file": "inputs/historical_embeddings_only_check.py",
+    "recovered_source": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_results/melanoma_reanalysis_results/embeddings_only_check.py",
+    "sha256": "6a642aed5809df8b861e949f7eb59df02d4732d4bd0a9f75f708f6f8887be5e0"
+  },
+  {
+    "file": "inputs/historical_xgb_models.py",
+    "recovered_source": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_bundle/code/src/models/xgb_models.py",
+    "sha256": "574cfbbb87a24085212dd2b80470de240fd4fb9b0186f03f3751ac056fd5106e"
+  },
+  {
+    "file": "inputs/historical_config.yaml",
+    "recovered_source": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_bundle/config.yaml",
+    "sha256": "a634ff6f2116146a0cd7c424f49cf97f6886f2aefefb9199ec93ba2ad3709bbb"
+  },
+  {
+    "file": "inputs/historical_audit_environment_lock.txt",
+    "recovered_source": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/MELANOMA_FINAL_SCIENTIFIC_AUDIT/results/pre_submission_audit/environment_lock.txt",
+    "sha256": "5379d92e0cebff303a7d7631d1082b088552ca9042369cb8bb8a37afd1e69508"
+  }
+]

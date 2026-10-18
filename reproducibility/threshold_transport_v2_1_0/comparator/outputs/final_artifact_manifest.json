@@ -1,0 +1,63 @@
+{
+  "model": {
+    "saved_before_external_evaluation_utc": "2026-10-18T19:14:59.489372+00:00",
+    "model_name": "EmbeddingsOnly_Reconstructed",
+    "model_file": {
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/comparator/outputs/embeddings_only_reconstructed.ubj",
+      "bytes": 927631,
+      "sha256": "b5f68df5d43d46f8816f6215844e87e953f6e895f4c5d8800edf572cc906c07d"
+    },
+    "predeclared_specification_sha256": "4de25f0feba758baee3a3449653ad5268e72cb0821e4f458d6a24ea0447de14b"
+  },
+  "prediction_files": [
+    {
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/comparator/outputs/predictions_ham_val.csv",
+      "bytes": 136876,
+      "sha256": "233ec430c2a08c967d1a4e2f17c6d9ba66b43d98af97fc5de88dd294c1d1fbe4"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/comparator/outputs/predictions_ham_test.csv",
+      "bytes": 138829,
+      "sha256": "8aafb2d413ea4ce435738f24a0c17d303cb28aa4895b54f9a8d27f7bf9337cf3"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/comparator/outputs/predictions_bcn_external.csv",
+      "bytes": 1185732,
+      "sha256": "28e7bc5844505ec63fdd1d529e0cd90935f857b3b9d784becafaad90ec91481f"
+    }
+  ],
+  "evaluation_input_files": [
+    {
+      "path": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_bundle/data/derived/embeddings/bcn20000_effb0.npy",
+      "bytes": 97003648,
+      "sha256": "adf84e886dc8d343aabf657e110fe562a74e930c18d06358ef9bc233b01e3707"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_bundle/data/derived/embeddings/bcn20000_effb0_ids.csv",
+      "bytes": 265254,
+      "sha256": "9adc3af1cd16025b0da7b3024c36408d934f0f80d9e21ccdc976d28daea44a74"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_results/melanoma_reanalysis_results/bcn_predictions_metadata_clustered.csv",
+      "bytes": 3225636,
+      "sha256": "de5354341c095ec06f7ef1c6bdc113f0d1b5a9909932ba43cee28a864d2be9bf"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_results/melanoma_reanalysis_results/table_external_embeddings_only_ablation.csv",
+      "bytes": 70,
+      "sha256": "d74df72117f0c23bfa0ff75562474d545cc0241dd3ae6c635a7302e260f6f081"
+    }
+  ],
+  "performance_comparison": {
+    "model_name": "EmbeddingsOnly_Reconstructed",
+    "reconstructed_external_AUC": 0.7613159017096941,
+    "archived_external_AUC": 0.7613159017096941,
+    "difference_from_archived_AUC": 0.0,
+    "matches_archived_AUC_at_absolute_tolerance_1e_minus_12": true,
+    "hybrid_external_AUC_same_rows": 0.760814299086658,
+    "hybrid_minus_reconstructed_external_AUC": -0.0005016026230361126,
+    "qualification": "An AUC match is an aggregate reproduction result, not proof of row-wise identity to unavailable original embeddings-only scores. Model remains explicitly labeled reconstructed.",
+    "after_evaluation_action": "No alternative parameterization or refit is selected based on these external results."
+  },
+  "completed_utc": "2026-10-18T19:15:00.273597+00:00"
+}

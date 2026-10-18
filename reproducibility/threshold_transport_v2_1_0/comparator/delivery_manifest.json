@@ -1,0 +1,115 @@
+{
+  "scope": "Scientific source, selected training input, reconstructed model, scores and verification; local vendor excluded.",
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 5482,
+      "sha256": "b39116f7b5cae9e1c77eed4ab21fbc6d9cc166fc3b5ef1caf5a16eacca61839a"
+    },
+    {
+      "file": "inputs/historical_audit_environment_lock.txt",
+      "bytes": 667,
+      "sha256": "5379d92e0cebff303a7d7631d1082b088552ca9042369cb8bb8a37afd1e69508"
+    },
+    {
+      "file": "inputs/historical_config.yaml",
+      "bytes": 2730,
+      "sha256": "a634ff6f2116146a0cd7c424f49cf97f6886f2aefefb9199ec93ba2ad3709bbb"
+    },
+    {
+      "file": "inputs/historical_embeddings_only_check.py",
+      "bytes": 2377,
+      "sha256": "6a642aed5809df8b861e949f7eb59df02d4732d4bd0a9f75f708f6f8887be5e0"
+    },
+    {
+      "file": "inputs/historical_xgb_models.py",
+      "bytes": 586,
+      "sha256": "574cfbbb87a24085212dd2b80470de240fd4fb9b0186f03f3751ac056fd5106e"
+    },
+    {
+      "file": "outputs/booster_configuration.json",
+      "bytes": 1587,
+      "sha256": "5bbd8b84bce8370c9cea8c9d0e12040f11dbc7a2d27d092fcfdab7134c68217e"
+    },
+    {
+      "file": "outputs/embeddings_only_reconstructed.ubj",
+      "bytes": 927631,
+      "sha256": "b5f68df5d43d46f8816f6215844e87e953f6e895f4c5d8800edf572cc906c07d"
+    },
+    {
+      "file": "outputs/export_verification.json",
+      "bytes": 604,
+      "sha256": "0c1be1df1b25990a75881edfb8d78670899f0028e4f13616e790ba00b2639b1c"
+    },
+    {
+      "file": "outputs/final_artifact_manifest.json",
+      "bytes": 3180,
+      "sha256": "94c6e78228ea2002f92e26f93904a23ac23f4233a7ed8636c641eaddaf2a2d84"
+    },
+    {
+      "file": "outputs/model_frozen_manifest.json",
+      "bytes": 474,
+      "sha256": "a0ed60b923c7d3a978bc1a185613c8d779601a56cb0083a2be242049a7df1c82"
+    },
+    {
+      "file": "outputs/predeclared_specification.json",
+      "bytes": 3434,
+      "sha256": "4de25f0feba758baee3a3449653ad5268e72cb0821e4f458d6a24ea0447de14b"
+    },
+    {
+      "file": "outputs/predictions_bcn_external.csv",
+      "bytes": 1185732,
+      "sha256": "28e7bc5844505ec63fdd1d529e0cd90935f857b3b9d784becafaad90ec91481f"
+    },
+    {
+      "file": "outputs/predictions_ham_test.csv",
+      "bytes": 138829,
+      "sha256": "8aafb2d413ea4ce435738f24a0c17d303cb28aa4895b54f9a8d27f7bf9337cf3"
+    },
+    {
+      "file": "outputs/predictions_ham_val.csv",
+      "bytes": 136876,
+      "sha256": "233ec430c2a08c967d1a4e2f17c6d9ba66b43d98af97fc5de88dd294c1d1fbe4"
+    },
+    {
+      "file": "outputs/reconstructed_performance.csv",
+      "bytes": 417,
+      "sha256": "fc6fb142d47dd47330ead4243c85020f6953c340492678ab25b4dbfef1b6e24a"
+    },
+    {
+      "file": "outputs/reproduction_comparison.json",
+      "bytes": 695,
+      "sha256": "be727110b63637ecf06ffa405c8da63fbf8099cb49ccf0e26fab81a76e1a65d8"
+    },
+    {
+      "file": "outputs/training_features_float32.npy",
+      "bytes": 35840128,
+      "sha256": "fd664d353bc1965b4dc5f3433c5bc75c129fbcddd5860290d48e8c286e5cb423"
+    },
+    {
+      "file": "outputs/training_labels.npy",
+      "bytes": 56128,
+      "sha256": "713cd3221ff9913d6465f3101bd90879a4209361df2853410c549bc2c41c787a"
+    },
+    {
+      "file": "outputs/training_rows.csv",
+      "bytes": 257172,
+      "sha256": "0f977516eda94c33f15e300c647948eed64aa42337ee89ece38b5a5ba7b6209b"
+    },
+    {
+      "file": "reconstruct_embeddings_only.py",
+      "bytes": 11819,
+      "sha256": "3e26863ebcc4b8207d4723bdd1fe4115cca309c0e8c75dee28c117988399ff04"
+    },
+    {
+      "file": "requirements_reconstruction.txt",
+      "bytes": 76,
+      "sha256": "2e728364ec53da7938ba33b084f001473812ecb9f33bbf8b9febd5bae7148821"
+    },
+    {
+      "file": "source_manifest.json",
+      "bytes": 1188,
+      "sha256": "ec6f190620759a75718520cfd5e0c6241f17fb584afbda479a8065f1d429020d"
+    }
+  ]
+}

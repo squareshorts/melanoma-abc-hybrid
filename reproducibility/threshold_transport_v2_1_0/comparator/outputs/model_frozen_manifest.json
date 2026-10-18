@@ -1,0 +1,10 @@
+{
+  "saved_before_external_evaluation_utc": "2026-10-18T19:14:59.489372+00:00",
+  "model_name": "EmbeddingsOnly_Reconstructed",
+  "model_file": {
+    "path": "/workspace/scratch/c2b29ff966df/revision_work/comparator/outputs/embeddings_only_reconstructed.ubj",
+    "bytes": 927631,
+    "sha256": "b5f68df5d43d46f8816f6215844e87e953f6e895f4c5d8800edf572cc906c07d"
+  },
+  "predeclared_specification_sha256": "4de25f0feba758baee3a3449653ad5268e72cb0821e4f458d6a24ea0447de14b"
+}

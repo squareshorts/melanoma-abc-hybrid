@@ -1,0 +1,79 @@
+{
+  "model_name": "EmbeddingsOnly_Reconstructed",
+  "specification_frozen_utc": "2026-10-18T19:14:26.093365+00:00",
+  "status": "historical-specification reconstruction; original embeddings-only fitted object unavailable",
+  "historical_specification_source": {
+    "path": "/workspace/scratch/c2b29ff966df/revision_work/comparator/inputs/historical_embeddings_only_check.py",
+    "bytes": 2377,
+    "sha256": "6a642aed5809df8b861e949f7eb59df02d4732d4bd0a9f75f708f6f8887be5e0"
+  },
+  "historical_parameters": {
+    "n_estimators": 600,
+    "max_depth": 4,
+    "learning_rate": 0.03,
+    "subsample": 0.9,
+    "colsample_bytree": 0.9,
+    "reg_lambda": 1.0,
+    "eval_metric": "logloss",
+    "n_jobs": 4,
+    "random_state": 0
+  },
+  "training_rule": "Original HAM metadata row order; train lesion membership; select image_id/y_true; drop_duplicates; filter to archived embedding IDs; indexed np.asarray extraction with no dtype conversion.",
+  "training_feature_dtype": "float32",
+  "training_label_dtype": "int64",
+  "training_shape": [
+    7000,
+    1280
+  ],
+  "training_positive_count": 774,
+  "software": {
+    "python": "3.12.14",
+    "xgboost": "3.2.0",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.8.0",
+    "scipy": "1.17.0"
+  },
+  "inputs_used_before_fitting": [
+    {
+      "path": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_bundle/external_metadata/HAM10000_metadata.csv",
+      "bytes": 563277,
+      "sha256": "06aee5e603d313ba69de38263053c792a1dff030eb9c44a96ceb477ceefb99a5"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_bundle/data/splits/ham_lesion_split.json",
+      "bytes": 149677,
+      "sha256": "f9a0beecf80a526b983d14dc38ef7efd05dbe3bdbd3de4e2e2aa5e5518ded3ef"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_bundle/data/derived/embeddings/ham_effb0.npy",
+      "bytes": 51276928,
+      "sha256": "988ebf4901186dbe112fe02b1283914e8c6fc0aea500702e8ce4bedb11829e28"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/tmp/project_history/extracted/melanoma_reanalysis_bundle/data/derived/embeddings/ham_effb0_ids.csv",
+      "bytes": 140220,
+      "sha256": "24e8e2c3614ea947709155e414b9bd7c7feeda3265c59448f34789040c5ded8a"
+    }
+  ],
+  "frozen_training_exports": [
+    {
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/comparator/outputs/training_rows.csv",
+      "bytes": 257172,
+      "sha256": "0f977516eda94c33f15e300c647948eed64aa42337ee89ece38b5a5ba7b6209b"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/comparator/outputs/training_features_float32.npy",
+      "bytes": 35840128,
+      "sha256": "fd664d353bc1965b4dc5f3433c5bc75c129fbcddd5860290d48e8c286e5cb423"
+    },
+    {
+      "path": "/workspace/scratch/c2b29ff966df/revision_work/comparator/outputs/training_labels.npy",
+      "bytes": 56128,
+      "sha256": "713cd3221ff9913d6465f3101bd90879a4209361df2853410c549bc2c41c787a"
+    }
+  ],
+  "number_of_fits_in_this_run": 1,
+  "selection": "No validation selection, external tuning, alternative seed, hyperparameter search or CNN retraining.",
+  "environment_qualification": "XGBoost matches the recovered later audit lock (3.2.0). Other current runtime package versions are recorded above; the exact original October 3 runtime was not separately recovered."
+}

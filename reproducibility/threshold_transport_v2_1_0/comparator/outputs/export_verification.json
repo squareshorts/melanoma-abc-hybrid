@@ -1,0 +1,25 @@
+{
+  "ham_val": {
+    "images": 1505,
+    "lesions": 1120,
+    "melanoma_images": 172,
+    "unique_image_ids": true,
+    "finite_bounded_scores": true
+  },
+  "ham_test": {
+    "images": 1510,
+    "lesions": 1121,
+    "melanoma_images": 167,
+    "unique_image_ids": true,
+    "finite_bounded_scores": true
+  },
+  "bcn_external": {
+    "images": 12413,
+    "lesions": 3576,
+    "melanoma_images": 2857,
+    "unique_image_ids": true,
+    "finite_bounded_scores": true
+  },
+  "native_model_reload_validation_score_max_absolute_error": 2.220446049250313e-16,
+  "additional_training_fits_for_verification": 0
+}

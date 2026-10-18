@@ -1,0 +1,9 @@
+# Versions used for score analysis, tests, figures, and author notes.
+# Core reanalysis requires only numpy and pandas.
+numpy==2.3.5
+pandas==2.2.3
+scikit-learn==1.8.0
+matplotlib==3.10.8
+reportlab==4.4.9
+# XGBoost 3.2.0 is only needed for optional upstream head reconstruction.
+# LaTeX compilation additionally requires a TeX distribution and latexmk.

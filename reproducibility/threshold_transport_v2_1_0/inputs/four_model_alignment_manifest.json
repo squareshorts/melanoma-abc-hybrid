@@ -1,0 +1,53 @@
+{
+  "purpose": "Add one documented historical-spec reconstructed head without changing archived model probabilities",
+  "new_model": "EmbeddingsOnly_Reconstructed",
+  "reconstruction_manifest": "comparator/outputs/model_frozen_manifest.json",
+  "variants": {
+    "original": {
+      "ham_validation": {
+        "input_sha256": "537c2e5501210d53920fcacf398fa92ea6d665153f5ac57454005a7138502cff",
+        "comparator_sha256": "233ec430c2a08c967d1a4e2f17c6d9ba66b43d98af97fc5de88dd294c1d1fbe4",
+        "output_sha256": "bd77b1f90d6c17afa1723623eaf69eeabc71533d1917ccee0cb94216b291ea63",
+        "rows": 1505,
+        "lesions": 1120
+      },
+      "ham_test": {
+        "input_sha256": "bdf83a7434f98b1720c312d9203dc6d7e1f37524e1ba0a2caeed25e87844048f",
+        "comparator_sha256": "8aafb2d413ea4ce435738f24a0c17d303cb28aa4895b54f9a8d27f7bf9337cf3",
+        "output_sha256": "8c143b1c5973c0e629a0f15f809e7e36525ceb0ee68b91cd18c51ce531486439",
+        "rows": 1510,
+        "lesions": 1121
+      },
+      "bcn_external": {
+        "input_sha256": "3e155a85c06661d6e9e343bf9e6917e54252e520f977a54ef3238f57660787db",
+        "comparator_sha256": "28e7bc5844505ec63fdd1d529e0cd90935f857b3b9d784becafaad90ec91481f",
+        "output_sha256": "7379e5fe8d9af1aaa6082a2cef69ac54147a1133b10eb6eb5e39bf5e8d51dbb5",
+        "rows": 12413,
+        "lesions": 3576
+      }
+    },
+    "known_identity_corrected": {
+      "ham_validation": {
+        "input_sha256": "de1be6a5a498de71f1a2fed9f5403106c6beef9e0005cc2b3acc2c930b97f930",
+        "comparator_sha256": "233ec430c2a08c967d1a4e2f17c6d9ba66b43d98af97fc5de88dd294c1d1fbe4",
+        "output_sha256": "d363bb3c68b32ef04f12ab0f6dcc2b128b10be5b76787ea754de5a71af6ce0e9",
+        "rows": 1499,
+        "lesions": 1114
+      },
+      "ham_test": {
+        "input_sha256": "c811d5bca1871c93c6f3e854e1e845c2fa440d40f04c7550c843fc94bb0c60ae",
+        "comparator_sha256": "8aafb2d413ea4ce435738f24a0c17d303cb28aa4895b54f9a8d27f7bf9337cf3",
+        "output_sha256": "6c055e1e7287c5e406563a33041f9061141951f5c89a8baac15a7f12bde6954f",
+        "rows": 1504,
+        "lesions": 1116
+      },
+      "bcn_external": {
+        "input_sha256": "8acf441774448be566689a8ecc31ecda9eeab5e885cd8d841d7195566131e80e",
+        "comparator_sha256": "28e7bc5844505ec63fdd1d529e0cd90935f857b3b9d784becafaad90ec91481f",
+        "output_sha256": "2139df9af7b9f12e7e03adf1fe78dd8e8185a0c6869b4c745c02c0134b2c9bc1",
+        "rows": 12413,
+        "lesions": 3576
+      }
+    }
+  }
+}
