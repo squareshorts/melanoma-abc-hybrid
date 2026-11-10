@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_auc_score, roc_curve
+from matplotlib.lines import Line2D
 
 BASE = Path('reproducibility/threshold_transport_v2_1_0')
 DATA = BASE / 'inputs/four_model_known_identity_corrected'
@@ -159,35 +160,71 @@ def points(src: pd.DataFrame, ext: pd.DataFrame, unit: str) -> list[dict]:
 
 
 def plot_roc(ext: pd.DataFrame, policy: pd.DataFrame, out: Path):
-    fig, ax = plt.subplots(figsize=(7.0,5.0))
+    """Plot external ROC curves and the two source-defined policies without label overlap."""
+    names = {'Handcrafted': 'Handcrafted XGBoost',
+             'Deep': 'EfficientNet-B0', 'Hybrid': 'Combined XGBoost'}
+    fig, ax = plt.subplots(figsize=(7.25, 5.35))
     for model in MODELS:
-        fpr, tpr, _ = roc_curve(ext.y_true, ext[model]); auc = roc_auc_score(ext.y_true,ext[model])
-        line, = ax.plot(fpr,tpr,lw=1.8,label=f'{model} (AUC {auc:.3f})')
+        fpr, tpr, _ = roc_curve(ext.y_true, ext[model])
+        auc = roc_auc_score(ext.y_true, ext[model])
+        line, = ax.plot(fpr, tpr, lw=1.95, label=f'{names[model]} (AUC {auc:.3f})')
         color = line.get_color()
-        for target,mark in [('sensitivity','o'),('specificity','s')]:
-            row = policy[(policy.model==model)&(policy.source_target==target)].iloc[0]
-            ax.plot(1-row.external_specificity,row.external_sensitivity,mark,ms=7,
-                    color=color, markeredgecolor='black', markeredgewidth=.35)
-    ax.plot([0,1],[0,1],ls=':',lw=1,color='gray')
-    ax.set(xlabel='1 - specificity',ylabel='Sensitivity', xlim=(0,1),ylim=(0,1))
-    ax.grid(alpha=.15);ax.legend(loc='lower right',frameon=False,fontsize=8)
-    ax.text(.03,.05,'Circles: source 90% sensitivity\nSquares: source 90% specificity',
-            transform=ax.transAxes,fontsize=8,va='bottom')
-    fig.tight_layout();fig.savefig(out/'roc_transport_lesion.pdf',bbox_inches='tight');fig.savefig(out/'roc_transport_lesion.png',dpi=180,bbox_inches='tight');plt.close(fig)
+        for target, mark in [('sensitivity', 'o'), ('specificity', 's')]:
+            row = policy[(policy.model == model) &
+                         (policy.source_target == target)].iloc[0]
+            ax.plot(1-row.external_specificity, row.external_sensitivity, mark,
+                    ms=7.5, color=color, markeredgecolor='black',
+                    markeredgewidth=.7, zorder=5)
+    ax.plot([0, 1], [0, 1], ls=':', lw=1, color='gray')
+    ax.set(xlabel='1 - specificity', ylabel='Sensitivity',
+           xlim=(0, 1), ylim=(0, 1))
+    ax.grid(alpha=.15)
+    ax.legend(loc='lower right', frameon=True, facecolor='white',
+              framealpha=.95, fontsize=8.4)
+    marker_handles = [
+        Line2D([0], [0], marker='o', color='none', markerfacecolor='white',
+               markeredgecolor='black', ms=8, linestyle='None',
+               label='Source sensitivity >= 0.90'),
+        Line2D([0], [0], marker='s', color='none', markerfacecolor='white',
+               markeredgecolor='black', ms=8, linestyle='None',
+               label='Source specificity >= 0.90')]
+    # Keep the marker key below the plot; the lower-left handcrafted square stays visible.
+    fig.legend(handles=marker_handles, loc='lower center',
+               bbox_to_anchor=(.5, .015), ncol=2, frameon=False, fontsize=8.6)
+    fig.subplots_adjust(left=.105, right=.97, top=.975, bottom=.195)
+    fig.savefig(out/'roc_transport_lesion.pdf', bbox_inches='tight')
+    fig.savefig(out/'roc_transport_lesion.png', dpi=220, bbox_inches='tight')
+    plt.close(fig)
 
 
 def plot_boot(ci: pd.DataFrame, out: Path):
-    fig, ax=plt.subplots(figsize=(6.2,3.6))
-    for j,(m,grp) in enumerate(ci.groupby('model',sort=False)):
-        for i,method in enumerate(['naive_images','clustered_lesions']):
-            row=grp.set_index('method').loc[method]
-            yi=j*2.5+i
-            ax.plot([row.low,row.high],[yi,yi],lw=3.3,label=method if j==0 else None)
-            ax.plot((row.low+row.high)/2,yi,'o',ms=3)
-    ax.set_yticks([0.5,3.0],['Deep','Hybrid']);ax.invert_yaxis()
-    ax.set_xlabel('External image-level ROC-AUC, bootstrap 95% CI');ax.grid(axis='x',alpha=.2)
-    ax.legend(['Naive image resampling','Lesion-cluster resampling'],frameon=False,fontsize=8)
-    fig.tight_layout();fig.savefig(out/'bootstrap_comparison.pdf',bbox_inches='tight');plt.close(fig)
+    """Use one invariant color per bootstrap method and a genuine method legend."""
+    palette = {'naive_images': 'C0', 'clustered_lesions': 'C3'}
+    labels = {'naive_images': 'Independent image resampling',
+              'clustered_lesions': 'Whole-lesion resampling'}
+    models = [('Deep', 'EfficientNet-B0'), ('Hybrid', 'Combined XGBoost')]
+    fig, ax = plt.subplots(figsize=(6.75, 3.6))
+    for j, (model, _) in enumerate(models):
+        grp = ci[ci.model.eq(model)].set_index('method')
+        for i, method in enumerate(['naive_images', 'clustered_lesions']):
+            row = grp.loc[method]
+            yy = j * 2.5 + i
+            ax.plot([row.low, row.high], [yy, yy], lw=3.5,
+                    color=palette[method], solid_capstyle='round')
+            ax.plot((row.low + row.high)/2, yy, 'o', ms=5,
+                    color=palette[method], markeredgecolor='black', markeredgewidth=.35)
+    ax.set_yticks([.5, 3.0], [name for _, name in models])
+    ax.invert_yaxis()
+    ax.set_xlabel('External image-level ROC-AUC (bootstrap 95% CI)')
+    ax.grid(axis='x', alpha=.2)
+    handles = [Line2D([0], [0], color=palette[k], marker='o', lw=3,
+                      markersize=5, label=labels[k])
+               for k in ('naive_images', 'clustered_lesions')]
+    ax.legend(handles=handles, frameon=False, fontsize=8.5, loc='lower right')
+    fig.tight_layout()
+    fig.savefig(out/'bootstrap_comparison.pdf', bbox_inches='tight')
+    fig.savefig(out/'bootstrap_comparison.png', dpi=220, bbox_inches='tight')
+    plt.close(fig)
 
 
 def run(repo: Path, out: Path, reps: int, seed: int):
