@@ -32,6 +32,8 @@ jobs:
         run: python tutorial/worked_example.py --repo . --out tutorial_results --bootstrap 250 --seed 20261110
       - name: Execute six protocol and regression tests
         run: python -m unittest discover -s tutorial/tests -p 'test_worked_example.py' -v
+      - name: Validate clustered confidence intervals against known truth
+        run: python tutorial/synthetic_validation.py --out tutorial_results/simulation_results.json --simulations 120 --bootstraps 220 --seed 20261110
       - name: Preserve outputs
         if: always()
         uses: actions/upload-artifact@v4
