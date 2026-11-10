@@ -1,7 +1,7 @@
 {
-  "title": "External transport of melanoma decision thresholds: lesion-level evaluation and reproducibility code",
+  "title": "Lesion-aware external validation and threshold transport for dermoscopic AI: reproducible software and known-truth verification",
   "upload_type": "software",
-  "description": "Version 2.1.0 accompanies the study of threshold transfer from HAM10000 to BCN20000. The version includes per-image scores and lesion identifiers, selected thresholds, lesion-level and image-level estimates, lesion-clustered and source-reselection bootstrap analyses, known identity-correction sensitivity analyses, and the embeddings-only XGBoost comparator. Original dermoscopic images are not redistributed. The current release is based on previously fitted image classifiers; score-level analysis does not reproduce initial CNN training. The prior v2.0.0 Zenodo DOI is 10.5281/zenodo.23130026.",
+  "description": "Version 2.2.0 adds a tested score-level evaluation tutorial for repeated lesion views, source-only threshold selection, ties, lesion-clustered uncertainty, source-threshold bootstrap reselection, identity sensitivity checks and known-truth synthetic interval coverage. The HAM10000-to-BCN20000 worked example reuses previously fitted classifier scores. No CNN is retrained. Established statistical methods are integrated in a documented executable workflow. The 120-dataset Monte Carlo results apply only to the stated data-generating conditions. Original dermoscopic images are not redistributed.",
   "creators": [
     {
       "name": "Chaves, Rafael Oliveira",
@@ -14,15 +14,15 @@
   ],
   "keywords": [
     "melanoma",
-    "dermoscopy",
-    "decision thresholds",
+    "imaging informatics",
     "external validation",
-    "HAM10000",
-    "BCN20000",
-    "lesion-level analysis",
+    "lesion-level clustering",
+    "threshold transport",
     "bootstrap",
-    "reproducibility"
+    "reproducibility",
+    "synthetic verification"
   ],
   "access_right": "open",
-  "license": "mit-license"
+  "license": "mit-license",
+  "version": "2.2.0"
 }
