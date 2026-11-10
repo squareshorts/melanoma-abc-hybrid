@@ -160,14 +160,15 @@ def points(src: pd.DataFrame, ext: pd.DataFrame, unit: str) -> list[dict]:
 
 
 def plot_roc(ext: pd.DataFrame, policy: pd.DataFrame, out: Path):
-    """Plot external ROC curves and the two source-defined policies without label overlap."""
+    """Plot source-defined operating points without obscuring the underlying ROC curve."""
     names = {'Handcrafted': 'Handcrafted XGBoost',
              'Deep': 'EfficientNet-B0', 'Hybrid': 'Combined XGBoost'}
     fig, ax = plt.subplots(figsize=(7.25, 5.35))
     for model in MODELS:
         fpr, tpr, _ = roc_curve(ext.y_true, ext[model])
         auc = roc_auc_score(ext.y_true, ext[model])
-        line, = ax.plot(fpr, tpr, lw=1.95, label=f'{names[model]} (AUC {auc:.3f})')
+        line, = ax.plot(fpr, tpr, lw=1.95,
+                        label=f'{names[model]} (AUC {auc:.3f})')
         color = line.get_color()
         for target, mark in [('sensitivity', 'o'), ('specificity', 's')]:
             row = policy[(policy.model == model) &
@@ -184,11 +185,10 @@ def plot_roc(ext: pd.DataFrame, policy: pd.DataFrame, out: Path):
     marker_handles = [
         Line2D([0], [0], marker='o', color='none', markerfacecolor='white',
                markeredgecolor='black', ms=8, linestyle='None',
-               label='Source sensitivity >= 0.90'),
+               label=r'Source sensitivity $\geq 0.90$'),
         Line2D([0], [0], marker='s', color='none', markerfacecolor='white',
                markeredgecolor='black', ms=8, linestyle='None',
-               label='Source specificity >= 0.90')]
-    # Keep the marker key below the plot; the lower-left handcrafted square stays visible.
+               label=r'Source specificity $\geq 0.90$')]
     fig.legend(handles=marker_handles, loc='lower center',
                bbox_to_anchor=(.5, .015), ncol=2, frameon=False, fontsize=8.6)
     fig.subplots_adjust(left=.105, right=.97, top=.975, bottom=.195)
@@ -198,7 +198,7 @@ def plot_roc(ext: pd.DataFrame, policy: pd.DataFrame, out: Path):
 
 
 def plot_boot(ci: pd.DataFrame, out: Path):
-    """Use one invariant color per bootstrap method and a genuine method legend."""
+    """Show full-sample AUC points with stable-colored bootstrap intervals."""
     palette = {'naive_images': 'C0', 'clustered_lesions': 'C3'}
     labels = {'naive_images': 'Independent image resampling',
               'clustered_lesions': 'Whole-lesion resampling'}
@@ -211,7 +211,7 @@ def plot_boot(ci: pd.DataFrame, out: Path):
             yy = j * 2.5 + i
             ax.plot([row.low, row.high], [yy, yy], lw=3.5,
                     color=palette[method], solid_capstyle='round')
-            ax.plot((row.low + row.high)/2, yy, 'o', ms=5,
+            ax.plot(row.estimate, yy, 'o', ms=5,
                     color=palette[method], markeredgecolor='black', markeredgewidth=.35)
     ax.set_yticks([.5, 3.0], [name for _, name in models])
     ax.invert_yaxis()
@@ -220,8 +220,9 @@ def plot_boot(ci: pd.DataFrame, out: Path):
     handles = [Line2D([0], [0], color=palette[k], marker='o', lw=3,
                       markersize=5, label=labels[k])
                for k in ('naive_images', 'clustered_lesions')]
-    ax.legend(handles=handles, frameon=False, fontsize=8.5, loc='lower right')
-    fig.tight_layout()
+    fig.legend(handles=handles, frameon=False, fontsize=8.5, loc='lower center',
+               bbox_to_anchor=(.5, .015), ncol=2)
+    fig.subplots_adjust(left=.22, right=.975, top=.975, bottom=.265)
     fig.savefig(out/'bootstrap_comparison.pdf', bbox_inches='tight')
     fig.savefig(out/'bootstrap_comparison.png', dpi=220, bbox_inches='tight')
     plt.close(fig)
@@ -245,7 +246,7 @@ def run(repo: Path, out: Path, reps: int, seed: int):
     for mod in ('Deep','Hybrid'):
         for method in ('naive_images','clustered_lesions'):
             low,high=auc_interval(ext,mod,method,reps,seed+len(cis))
-            cis.append(dict(model=mod,method=method,low=low,high=high,width=high-low))
+            cis.append(dict(model=mod,method=method,estimate=float(roc_auc_score(ext.y_true, ext[mod])),low=low,high=high,width=high-low))
     ci=pd.DataFrame(cis);ci.to_csv(out/'bootstrap_comparison.csv',index=False)
     plot_boot(ci,out)
 
